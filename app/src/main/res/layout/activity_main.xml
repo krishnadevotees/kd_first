@@ -20,4 +20,6 @@
         />
     <include layout="@layout/nav_bar"/>
 
+
+
 </androidx.drawerlayout.widget.DrawerLayout>

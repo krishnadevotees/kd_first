@@ -11,8 +11,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,9 +26,10 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
-    NavigationView navigationView ;
+
     Toolbar toolbar;
 
+    private  AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         drawerLayout =findViewById(R.id.dl);
-        navigationView =findViewById( R.id.navigationview);
+        NavigationView navigationView  =findViewById( R.id.navigationview);
         toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -45,16 +51,32 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.homeFragment, R.id.secondFragment)
+                .setOpenableLayout(drawerLayout)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.frame);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                int id= item.getItemId();
-                switch (id){
+                Log.d("devin",""+item.getItemId());
+                switch (item.getItemId()){
                     case R.id.home:
                         Toast.makeText(MainActivity.this, "HOME", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.chapters:
+                        HomeFragment fragment=new HomeFragment();
+                        FragmentManager fm =getSupportFragmentManager();
+                        FragmentTransaction ft =fm.beginTransaction();
+                        ft.replace(R.id.frame,fragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+
                         Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.fav_sloka:
@@ -73,50 +95,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "setting", Toast.LENGTH_SHORT).show();
                         break;
                 }
-
-
-
-//                Log.d("devin", String.valueOf(id));
-//                if (id==R.id.home){
-//                    Toast.makeText(getApplication(), "Your message", Toast.LENGTH_SHORT).show();
-//                    Log.d("devin","home");
-//                }else if (id == R.id.chapters){
-//                    Log.d("devin","chapters");
-//                } else if (id == R.id.fav_sloka) {
-//                    Log.d("devin","fav_sloka");
-//                } else if (id == R.id.verseoftheday) {
-//                    Log.d("devin","verseoftheday");
-//                } else if (id == R.id.logout) {
-//                    Log.d("devin","logout");
-//                } else if (id == R.id.dm_language) {
-//                    Log.d("devin","dm_language");
-//                } else if (id == R.id.setting) {
-//                    Log.d("devin","setting");
-//                }
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-
                 return true;
             }
         });
 
-
-//        NavigationView navigationView = findViewById(R.id.navigationview);
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//                switch (menuItem.getItemId()) {
-//                    case R.id.home:
-//                        Toast.makeText(MainActivity.this, "Item 1 selected", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case R.id.chapters:
-//                        Toast.makeText(MainActivity.this, "Item 2 selected", Toast.LENGTH_SHORT).show();
-//                        break;
-//
-//                }
-//                return true;
-//            }
-//        });
 
     }
     @Override
@@ -132,16 +114,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getFragmentManager().popBackStack();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                getFragmentManager().popBackStack();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     private void loadfregment(Fragment fragment, int flag) {
         FragmentManager fm =getSupportFragmentManager();
@@ -153,8 +135,14 @@ public class MainActivity extends AppCompatActivity {
             ft.replace(R.id.frame,fragment);
 
         }
-        ft.addToBackStack(null);
+//        ft.addToBackStack(null);
         ft.commit();
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.frame);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }

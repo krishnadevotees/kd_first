@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 
 public class SecondFragment extends Fragment {
 
-
+    public int flag;
     public SecondFragment() {
         // Required empty public constructor
+    }
+    public SecondFragment(int flag){
+        this.flag=flag;
     }
 
 

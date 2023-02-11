@@ -37,6 +37,26 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         gridView = rootView.findViewById(R.id.gridlayout);
+
+
+        List<String> data = Arrays.asList("Title 1", "Title 2", "Title 3", "Title 4",
+                "Title 5", "Title 6", "Title 7", "Title 8","Title 9", "Title 10", "Title 11", "Title 12",
+                "Title 13", "Title 14", "Title 15", "Title 16","Title 17", "Title 18");
+        CardView_Adepter adapter = new CardView_Adepter(getActivity(), data);
+        gridView.setAdapter(adapter);
+
+
+        gridView.setOnItemClickListener((parent, view1, position, id) -> {
+
+            SecondFragment fragment=new SecondFragment();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft =fm.beginTransaction();
+            ft.replace(R.id.frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        });
+
+
         return  rootView;
     }
 
@@ -50,23 +70,7 @@ public class HomeFragment extends Fragment {
 //        cardDataList.add(new CardData("Title 2"));
 //        cardDataList.add(new CardData("Title 3"));
 // Add more items to the list as needed
-        GridView gridLayout = view.findViewById(R.id.gridlayout);
-        List<String> data = Arrays.asList("Title 1", "Title 2", "Title 3", "Title 4",
-                "Title 5", "Title 6", "Title 7", "Title 8","Title 9", "Title 10", "Title 11", "Title 12",
-                "Title 13", "Title 14", "Title 15", "Title 16","Title 17", "Title 18");
-        CardView_Adepter adapter = new CardView_Adepter(getActivity(), data);
-        gridLayout.setAdapter(adapter);
 
-
-        gridView.setOnItemClickListener((parent, view1, position, id) -> {
-
-            SecondFragment fragment=new SecondFragment();
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft =fm.beginTransaction();
-            ft.replace(R.id.frame,fragment);
-            ft.addToBackStack(null);
-            ft.commit();
-        });
 
     }
 }

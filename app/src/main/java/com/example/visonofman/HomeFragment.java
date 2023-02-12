@@ -48,12 +48,7 @@ public class HomeFragment extends Fragment {
 
         gridView.setOnItemClickListener((parent, view1, position, id) -> {
 
-            SecondFragment fragment=new SecondFragment();
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft =fm.beginTransaction();
-            ft.replace(R.id.frame,fragment);
-            ft.addToBackStack(null);
-            ft.commit();
+
         });
 
 

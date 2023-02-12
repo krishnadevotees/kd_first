@@ -26,9 +26,9 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
-
+    NavigationView navigationView;
+    NavController navController;
     Toolbar toolbar;
-
     private  AppBarConfiguration appBarConfiguration;
 
     @Override
@@ -37,32 +37,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         drawerLayout =findViewById(R.id.dl);
-        NavigationView navigationView  =findViewById( R.id.navigationview);
+        navigationView  = findViewById( R.id.navview);
         toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
 
-
         HomeFragment fragment=new HomeFragment();
         loadfregment(fragment,0);
 
-
-        ActionBarDrawerToggle toggle =new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.OpenDrawer,R.string.closeDrawer);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.homeFragment, R.id.secondFragment)
-                .setOpenableLayout(drawerLayout)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.frame);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+//
+//        appBarConfiguration = new AppBarConfiguration.Builder(
+//                R.id.homeFragment, R.id.secondFragment)
+//                .setOpenableLayout(drawerLayout)
+//                .build();
+////        navController = Navigation.findNavController(MainActivity.this, R.id.nav_host);
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//        NavigationUI.setupWithNavController(navigationView, navController);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                item.setChecked(true);
+                drawerLayout.closeDrawers();
 
                 Log.d("devin",""+item.getItemId());
                 switch (item.getItemId()){
@@ -70,13 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "HOME", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.chapters:
-                        HomeFragment fragment=new HomeFragment();
-                        FragmentManager fm =getSupportFragmentManager();
-                        FragmentTransaction ft =fm.beginTransaction();
-                        ft.replace(R.id.frame,fragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
-
+                        navController.navigate(R.id.chapters);
                         Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.fav_sloka:
@@ -99,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ActionBarDrawerToggle toggle =new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.OpenDrawer,R.string.closeDrawer);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
 
     }
     @Override
@@ -114,25 +110,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                getFragmentManager().popBackStack();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     private void loadfregment(Fragment fragment, int flag) {
         FragmentManager fm =getSupportFragmentManager();
         FragmentTransaction ft =fm.beginTransaction();
         if (flag == 0){
-            ft.add(R.id.frame,fragment);
+            ft.add(R.id.nav_host,fragment);
         }else{
 //            ft.replace(R.id.frame,fragment);
-            ft.replace(R.id.frame,fragment);
+            ft.replace(R.id.nav_host,fragment);
 
         }
 //        ft.addToBackStack(null);
@@ -141,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.frame);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }

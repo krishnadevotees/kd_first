@@ -1,42 +1,53 @@
 package com.example.visonofman.Adepters;
 
 import android.content.Context;
-import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.example.visonofman.ModelClass.VerseList;
+import com.example.visonofman.R;
 
-public class VerseListAdepter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import java.util.ArrayList;
 
+public class VerseListAdepter extends RecyclerView.Adapter<VerseListAdepter.ViewHolder>{
     Context context;
-    private List<String> Verse;
+    ArrayList<VerseList> verseLists ;
+    public VerseListAdepter(Context context, ArrayList<VerseList> verseLists) {
+        this.context=context;
+        this.verseLists=verseLists;
 
-
-    public VerseListAdepter(List<String> verse) {
-        Verse = verse;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view= LayoutInflater.from(context).inflate(R.layout.list_verse,parent,false);
+        ViewHolder viewHolder=new ViewHolder(view);
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        String data= Verse.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        holder.textView.setText(verseLists.get(position).getVerse());
 
     }
 
     @Override
     public int getItemCount() {
-        return Verse.size();
+        return verseLists.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textView;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.list_tv);
+        }
     }
 }

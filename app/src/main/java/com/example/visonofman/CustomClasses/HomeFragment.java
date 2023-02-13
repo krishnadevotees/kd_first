@@ -1,24 +1,20 @@
-package com.example.visonofman;
+package com.example.visonofman.CustomClasses;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridLayout;
 import android.widget.GridView;
 
 import com.example.visonofman.Adepters.CardView_Adepter;
-import com.example.visonofman.ModelClass.CardData;
+import com.example.visonofman.R;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +31,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.custom_home_fragment, container, false);
         gridView = rootView.findViewById(R.id.gridlayout);
 
 
@@ -48,11 +44,19 @@ public class HomeFragment extends Fragment {
 
         gridView.setOnItemClickListener((parent, view1, position, id) -> {
 
+        showFragment(new SecondFragment(getContext(),1));
 
         });
 
 
         return  rootView;
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 

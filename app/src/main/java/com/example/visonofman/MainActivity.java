@@ -19,8 +19,11 @@ import androidx.navigation.ui.NavigationUI;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.visonofman.CustomClasses.HomeFragment;
+import com.example.visonofman.CustomClasses.SecondFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     NavController navController;
+    FrameLayout frameLayout;
+
     Toolbar toolbar;
     private  AppBarConfiguration appBarConfiguration;
 
@@ -39,18 +44,20 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout =findViewById(R.id.dl);
         navigationView  = findViewById( R.id.navview);
         toolbar = findViewById(R.id.toolbar);
+        frameLayout =findViewById(R.id.container);
+//        navController = Navigation.findNavController(MainActivity.this, R.id.nav_host);
 
         setSupportActionBar(toolbar);
 
         HomeFragment fragment=new HomeFragment();
         loadfregment(fragment,0);
 
-//
+
 //        appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.homeFragment, R.id.secondFragment)
+//                R.id.homeFragment)
 //                .setOpenableLayout(drawerLayout)
 //                .build();
-////        navController = Navigation.findNavController(MainActivity.this, R.id.nav_host);
+//
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 //        NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -65,19 +72,23 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("devin",""+item.getItemId());
                 switch (item.getItemId()){
                     case R.id.home:
+                        loadfregment(new SecondFragment(MainActivity.this,1),1);
                         Toast.makeText(MainActivity.this, "HOME", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.chapters:
-                        navController.navigate(R.id.chapters);
+                        loadfregment(new SecondFragment(MainActivity.this,1),1);
                         Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.fav_sloka:
+//                        loadfregment(new SecondFragment(MainActivity.this,1),1);
                         Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.verseoftheday:
+//                        loadfregment(new SecondFragment(MainActivity.this,1),1);
                         Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.logout:
+//                        loadfregment(new SecondFragment(MainActivity.this,1),1);
                         Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.dm_language:
@@ -115,19 +126,19 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm =getSupportFragmentManager();
         FragmentTransaction ft =fm.beginTransaction();
         if (flag == 0){
-            ft.add(R.id.nav_host,fragment);
+            ft.add(R.id.container,fragment);
         }else{
 //            ft.replace(R.id.frame,fragment);
-            ft.replace(R.id.nav_host,fragment);
+            ft.replace(R.id.container,fragment);
 
         }
-//        ft.addToBackStack(null);
+        ft.addToBackStack(null);
         ft.commit();
 
     }
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host);
+        NavController navController = Navigation.findNavController(this, R.id.container);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }

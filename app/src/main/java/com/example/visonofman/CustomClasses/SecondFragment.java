@@ -39,7 +39,6 @@ public class SecondFragment extends Fragment {
         // Required empty public constructor
         this.context=context;
         this.flag=flag;
-
     }
 
 

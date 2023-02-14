@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.example.visonofman.CustomClasses.HomeFragment;
 import com.example.visonofman.CustomClasses.SecondFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -49,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        HomeFragment fragment=new HomeFragment();
-        loadfregment(fragment,0);
 
 
 //        appBarConfiguration = new AppBarConfiguration.Builder(
@@ -105,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle =new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.OpenDrawer,R.string.closeDrawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-
     }
     @Override
     public void onBackPressed() {

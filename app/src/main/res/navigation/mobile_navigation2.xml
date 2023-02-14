@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/nav_chapters"
         android:name="com.example.visonofman.ui.chapters.ChaptersFragment"
-        android:label="@string/menu_gallery"
+        android:label="@string/menu_chapter"
         tools:layout="@layout/fragment_chapters" >
         <action
             android:id="@+id/action_nav_gallery_to_secondFragment2"
@@ -23,12 +23,32 @@
 
     <fragment
         android:id="@+id/nav_language"
-        android:name="com.example.visonofman.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:name="com.example.visonofman.ui.language.LanguageFragment"
+        android:label="@string/menu_languages"
+        tools:layout="@layout/fragment_language" />
     <fragment
         android:id="@+id/secondFragment2"
         android:name="com.example.visonofman.CustomClasses.SecondFragment"
         android:label="fragment_second"
         tools:layout="@layout/fragment_second" />
+    <fragment
+        android:id="@+id/verseListFragment"
+        android:name="com.example.visonofman.VerseListFragment"
+        android:label="@string/title_verse"
+        tools:layout="@layout/fragment_verse_list" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.visonofman.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <activity
+        android:id="@+id/verseActivity"
+        android:name="com.example.visonofman.VerseActivity"
+        android:label="activity_verse"
+        tools:layout="@layout/activity_verse" />
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.example.visonofman.HomeActivity"
+        android:label="@string/title_vom"
+        tools:layout="@layout/app_bar_home2" />
 </navigation>

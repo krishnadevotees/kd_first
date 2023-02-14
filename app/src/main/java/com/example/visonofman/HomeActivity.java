@@ -1,12 +1,12 @@
 package com.example.visonofman;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -39,17 +39,51 @@ private ActivityHome2Binding binding;
 
          drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_chapters, R.id.nav_language)
+                R.id.nav_home,R.id.nav_chapters,R.id.nav_language)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-    }
 
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                Log.d("devin","navigation on item select lisener called :::::");
+//                drawer.closeDrawer(GravityCompat.START);
+//                int id= item.getItemId();
+//                switch (id){
+//                    case R.id.nav_chapters:{
+//
+//                        showFragment(new ChaptersFragment(HomeActivity.this),1);
+//                        break;
+//                    }
+//                    case R.id.nav_language:{
+//                        showFragment(new SlideshowFragment(),2);
+//                        break;
+//                    }
+//                }
+//
+//                return true;
+//            }
+//        });
+
+
+    }
+    private void showFragment(Fragment fragment,int flag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (flag == 0 ){
+            transaction.add(R.id.nav_host_fragment_content_home2, fragment);
+        }else {
+            transaction.replace(R.id.nav_host_fragment_content_home2, fragment);
+
+        }
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -72,7 +106,6 @@ private ActivityHome2Binding binding;
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
-        getSupportFragmentManager().beginTransaction().addToBackStack(null);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
 

@@ -1,27 +1,21 @@
-package com.example.visonofman.CustomClasses;
+package com.example.visonofman;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.visonofman.Adepters.VerseListAdepter;
 import com.example.visonofman.ModelClass.VerseList;
-import com.example.visonofman.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,9 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class SecondFragment extends Fragment {
+
+public class VerseListFragment extends Fragment {
 
     RecyclerView recyclerView;
     Context context;
@@ -41,30 +35,25 @@ public class SecondFragment extends Fragment {
     ArrayList<VerseList> data =new ArrayList<>();
     ArrayList<String> list =new ArrayList<>();
 
-
-
-
-    public SecondFragment(Context context,int flag) {
+    public VerseListFragment() {
         // Required empty public constructor
-        this.context=context;
-        this.flag=flag;
     }
+    public VerseListFragment(Context context, int flag) {
+        this.flag=flag;
+        this.context=context;
+
+    }
+
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         // Inflate the layout for this fragment
-        View rootView =inflater.inflate(R.layout.fragment_second, container, false);
+        View root = inflater.inflate(R.layout.fragment_verse_list, container, false);
 
-
-
-
-
-        recyclerView=rootView.findViewById(R.id.rv);
+        recyclerView=root.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference =firebaseDatabase.getReference("data/languages/0/chapters/"+flag+"/data/");
@@ -86,8 +75,8 @@ public class SecondFragment extends Fragment {
 
                 }
                 Log.d("devin",""+data.size());
-//                VerseListAdepter  adepter=new VerseListAdepter(getContext(),data);
-//                recyclerView.setAdapter(adepter);
+                VerseListAdepter adepter=new VerseListAdepter(getContext(),data,getFragmentManager(),flag);
+                recyclerView.setAdapter(adepter);
 
 
                 Log.d("devin","List Size :::  "+list.size());
@@ -99,40 +88,27 @@ public class SecondFragment extends Fragment {
             }
         });
 
-        return rootView;
+
+
+
+
+        return  root;
     }
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                data.clear();
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }
-        };
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    public void onResume() {
+        super.onResume();
+        // set the new title for the ActionBar
+        getActivity().setTitle("Verse");
     }
+    private void showFragment(Fragment fragment,int flag) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (flag == 0 ){
+            transaction.add(R.id.nav_host_fragment_content_home2, fragment);
+        }else {
+            transaction.replace(R.id.nav_host_fragment_content_home2, fragment);
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                getActivity().onBackPressed();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.home_as_up, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//    }
+        }
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }

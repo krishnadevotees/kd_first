@@ -10,7 +10,7 @@ public class ChaptersViewModel extends ViewModel {
 
     public ChaptersViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is gallery fragment");
+        mText.setValue("This is Language fragment");
     }
 
     public LiveData<String> getText() {

@@ -1,5 +1,7 @@
 package com.example.visonofman.ui.chapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.visonofman.Adepters.CardView_Adepter;
 import com.example.visonofman.CustomClasses.SecondFragment;
 import com.example.visonofman.R;
+import com.example.visonofman.VerseActivity;
 import com.example.visonofman.databinding.FragmentChaptersBinding;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,15 +29,19 @@ public class ChaptersFragment extends Fragment {
     GridView gridView;
 FirebaseDatabase firebaseDatabase;
 DatabaseReference databaseReference;
+Context context;
 private FragmentChaptersBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
-        ChaptersViewModel chaptersViewModel =
-                new ViewModelProvider(this).get(ChaptersViewModel.class);
+    public ChaptersFragment( ) {
 
-    binding = FragmentChaptersBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+
+        binding = FragmentChaptersBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         gridView = root.findViewById(R.id.gridlayout);
 
@@ -52,7 +59,11 @@ private FragmentChaptersBinding binding;
         gridView.setOnItemClickListener((parent, view1, position, id) -> {
 
             Log.d("devin",""+id);
-           showFragment(new SecondFragment(getContext(), (int) id));
+            Intent intent= new Intent(getContext(), VerseActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("chapter", String.valueOf(id));
+            intent.putExtras(bundle);
+            startActivity(intent);
 
         });
 
@@ -64,7 +75,7 @@ private FragmentChaptersBinding binding;
     private void showFragment(Fragment fragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setReorderingAllowed(true);
-        transaction.replace(R.id.nav_host_fragment_content_home2, fragment);
+        transaction.add(R.id.nav_host_fragment_content_home2, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

@@ -57,13 +57,16 @@ public class DisplayFragment extends Fragment {
 
         showData(verse);
 
-        FloatingActionButton next= view.findViewById(R.id.right_fab);
-        next.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton nextfab= view.findViewById(R.id.right_fab);
+
+        FloatingActionButton prevfab = view.findViewById(R.id.left_fab);
+        nextfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int next = verse + 1;
-
+                prevfab.setVisibility(View.VISIBLE);
                 if (verse < size -1 ){
+
 
                     verse = next;
                     showData(next);
@@ -73,6 +76,7 @@ public class DisplayFragment extends Fragment {
 
                 }
                 else {
+                    nextfab.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Go to next chapter ", Toast.LENGTH_SHORT).show();
                 }
 
@@ -86,14 +90,15 @@ public class DisplayFragment extends Fragment {
 
 
 
-        FloatingActionButton prev = view.findViewById(R.id.left_fab);
-        prev.setOnClickListener(new View.OnClickListener() {
+        prevfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                nextfab.setVisibility(View.VISIBLE);
                 int next = verse - 1;
 
                 if (verse < 1){
+
+                    prevfab.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "This is the first verse", Toast.LENGTH_SHORT).show();
                 }else {
                     verse = next;

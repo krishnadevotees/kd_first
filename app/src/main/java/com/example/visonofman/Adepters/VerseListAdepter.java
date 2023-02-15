@@ -86,7 +86,7 @@ public class VerseListAdepter extends RecyclerView.Adapter<VerseListAdepter.View
 
                     if (position != RecyclerView.NO_POSITION) {
                         FragmentTransaction transaction = mfragmentManager.beginTransaction();
-                        transaction.replace(R.id.container, new DisplayFragment(chapter,position));
+                        transaction.replace(R.id.container, new DisplayFragment(chapter,position,getItemCount()));
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }

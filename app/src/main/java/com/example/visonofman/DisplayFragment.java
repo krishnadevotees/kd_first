@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.visonofman.ModelClass.DisplayVerse;
-import com.example.visonofman.ModelClass.VerseList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,16 +21,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DisplayFragment extends Fragment {
 
-    int chapter,verse;
+    int chapter,verse,size,index;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<DisplayVerse> data =new ArrayList<>();
-    public DisplayFragment(int chapter,int verse) {
+    TextView Verse,Translate,Description;
+    ArrayList<String> list = new ArrayList<>();
+
+    public DisplayFragment(int chapter,int verse,int size) {
         this.chapter=chapter;
         this.verse=verse;
+        this.size=size;
     }
 
 
@@ -41,49 +47,59 @@ public class DisplayFragment extends Fragment {
 
 
         Log.d("devin","chapter no and verse no"+chapter+" "+verse);
-        TextView Verse,Translate,Description;
+
         Verse =view.findViewById(R.id.verse);
         Translate=view.findViewById(R.id.translate);
         Description=view.findViewById(R.id.desc);
 
         firebaseDatabase= FirebaseDatabase.getInstance();
-        databaseReference =firebaseDatabase.getReference("data/languages/0/chapters/"+chapter+"/data/"+verse+"/");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference =firebaseDatabase.getReference("data/languages/0/chapters/"+chapter+"/data/");
+
+        showData(verse);
+
+        FloatingActionButton next= view.findViewById(R.id.right_fab);
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                DisplayVerse v =snapshot.getValue(DisplayVerse.class);
-//                Log.d("devin","From Firebase data v :::"+v);
-//                Verse.setText(v.getVerse());
-//                Translate.setText(v.getTranslate());
-//                Description.setText(v.getDescription());
+            public void onClick(View view) {
+                int next = verse + 1;
 
-                if (snapshot.exists()) {
-                        String key1 = snapshot.child("VERSE").getValue(String.class);
-                        String key2 = snapshot.child("TRANSLATE").getValue(String.class);
-                        String key3 = snapshot.child("DESCRIPTION").getValue(String.class);
+                if (verse < size -1 ){
 
-                        Verse.setText(key1);
-                        Translate.setText(key2);
-                        Description.setText(key3);
+                    verse = next;
+                    showData(next);
 
-                        Log.d("Firebase", "Key 1 verse: " + key1);
-                        Log.d("Firebase", "Key 2 translate: " + key2);
-                        Log.d("Firebase", "Key 3 description: " + key3);
+                    Log.d("devin","size from adepter"+size);
+                    Log.d("devin","verse index from adepter"+verse);
 
                 }
+                else {
+                    Toast.makeText(getContext(), "Go to next chapter ", Toast.LENGTH_SHORT).show();
+                }
 
-//                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-//                    if (dataSnapshot.getKey().equals("VERSE")){
-//                        String v =dataSnapshot.getValue();
-//                    }
-//
-//                }
+                Log.d("devin","size from adepter"+size);
+                Log.d("devin","verse index from adepter"+verse);
 
             }
+        });
 
+
+
+
+
+        FloatingActionButton prev = view.findViewById(R.id.left_fab);
+        prev.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("Firebase", "Failed to read value.", error.toException());
+            public void onClick(View view) {
+
+                int next = verse - 1;
+
+                if (verse < 1){
+                    Toast.makeText(getContext(), "This is the first verse", Toast.LENGTH_SHORT).show();
+                }else {
+                    verse = next;
+                    showData(next);
+                }
+
             }
         });
 
@@ -92,8 +108,40 @@ public class DisplayFragment extends Fragment {
 
 
 
-
-
         return view;
     }
+    public void showData(int index){
+
+        databaseReference.child(String.valueOf(index)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()) {
+
+                    Verse.setText("");
+                    Translate.setText("");
+                    Description.setText("");
+
+                    String key1 = snapshot.child("VERSE").getValue(String.class);
+                    String key2 = snapshot.child("TRANSLATE").getValue(String.class);
+                    String key3 = snapshot.child("DESCRIPTION").getValue(String.class);
+
+                    Verse.setText(key1);
+                    Translate.setText(key2);
+                    Description.setText(key3);
+                    Description.setPadding(0,0,0,50);
+
+                    Log.d("Firebase", "Key 1 verse: " + key1);
+                    Log.d("Firebase", "Key 2 translate: " + key2);
+                    Log.d("Firebase", "Key 3 description: " + key3);
+
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("Firebase", "Failed to read Next value.", error.toException());
+            }
+        });
+    }
+
 }

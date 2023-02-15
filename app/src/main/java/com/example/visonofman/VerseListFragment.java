@@ -32,19 +32,19 @@ public class VerseListFragment extends Fragment {
     int flag;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    ArrayList<VerseList> data =new ArrayList<>();
-    ArrayList<String> list =new ArrayList<>();
+    ArrayList<VerseList> data = new ArrayList<>();
+    ArrayList<String> list = new ArrayList<>();
+    VerseListAdepter adepter;
 
     public VerseListFragment() {
         // Required empty public constructor
     }
+
     public VerseListFragment(Context context, int flag) {
-        this.flag=flag;
-        this.context=context;
+        this.flag = flag;
+        this.context = context;
 
     }
-
-
 
 
     @Override
@@ -53,38 +53,39 @@ public class VerseListFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_verse_list, container, false);
 
-        recyclerView=root.findViewById(R.id.recyclerview);
+        recyclerView = root.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        firebaseDatabase= FirebaseDatabase.getInstance();
-        databaseReference =firebaseDatabase.getReference("data/languages/0/chapters/"+flag+"/data/");
+        recyclerView.hasFixedSize();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("data/languages/0/chapters/" + flag + "/data/");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list.clear();
+                data.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-//                    Log.e(snapshot.getKey(),snapshot.getChildrenCount() + "");
                     list.add(snapshot.getKey());
-                }
-
-
-                for (int i=0; i < list.size(); i++){
-                    int a=i+1;
-                    data.add(new VerseList("verse "+a));
 
                 }
-                Log.d("devin",""+data.size());
-                VerseListAdepter adepter=new VerseListAdepter(getContext(),data,getFragmentManager(),flag);
+
+                for (int i = 0; i < list.size(); i++) {
+                    int a = i + 1;
+                    data.add(new VerseList("verse " + a));
+                }
+                Log.d("devin", "" + data.size());
+                adepter = new VerseListAdepter(getContext(), data, getFragmentManager(), flag);
                 recyclerView.setAdapter(adepter);
 
 
-                Log.d("devin","List Size :::  "+list.size());
+
+                Log.d("devin", "List Size :::  " + list.size());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("devin",""+error);
+                Log.d("devin", "" + error);
             }
         });
 
@@ -92,19 +93,24 @@ public class VerseListFragment extends Fragment {
 
 
 
-        return  root;
+
+
+
+        return root;
     }
+
     @Override
     public void onResume() {
         super.onResume();
         // set the new title for the ActionBar
         getActivity().setTitle("Verse");
     }
-    private void showFragment(Fragment fragment,int flag) {
+
+    private void showFragment(Fragment fragment, int flag) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if (flag == 0 ){
+        if (flag == 0) {
             transaction.add(R.id.nav_host_fragment_content_home2, fragment);
-        }else {
+        } else {
             transaction.replace(R.id.nav_host_fragment_content_home2, fragment);
 
         }

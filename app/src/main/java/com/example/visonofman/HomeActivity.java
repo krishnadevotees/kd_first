@@ -1,10 +1,27 @@
 package com.example.visonofman;
 
+import android.app.Dialog;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.example.visonofman.CustomClasses.Sharedprefrence_Language;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -49,27 +66,6 @@ private ActivityHome2Binding binding;
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                Log.d("devin","navigation on item select lisener called :::::");
-//                drawer.closeDrawer(GravityCompat.START);
-//                int id= item.getItemId();
-//                switch (id){
-//                    case R.id.nav_chapters:{
-//
-//                        showFragment(new ChaptersFragment(HomeActivity.this),1);
-//                        break;
-//                    }
-//                    case R.id.nav_language:{
-//                        showFragment(new SlideshowFragment(),2);
-//                        break;
-//                    }
-//                }
-//
-//                return true;
-//            }
-//        });
 
 
     }
@@ -90,6 +86,17 @@ private ActivityHome2Binding binding;
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_cLanguage:
+                showDialog();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
@@ -110,4 +117,100 @@ private ActivityHome2Binding binding;
                 || super.onSupportNavigateUp();
 
     }
+    public void showDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
+        dialog.setContentView(R.layout.bottamsheet_layout);
+
+
+
+
+        RadioGroup radioGroup= dialog.findViewById(R.id.radioGroup);
+        Button okbutton = dialog.findViewById(R.id.ok);
+
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+        int selectedRadioButtonId = prefs.getInt("selectedRadioButtonId", -1);
+        if (selectedRadioButtonId != -1) {
+            RadioButton selectedRadioButton = dialog.findViewById(selectedRadioButtonId);
+            selectedRadioButton.setChecked(true);
+        }
+
+
+        okbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String language = ""; 
+
+                int selectedRadioId = radioGroup.getCheckedRadioButtonId();
+                if (selectedRadioId == -1 ){
+                    return;
+                }
+                Log.d("dev",selectedRadioId+"  :::::  "+R.id.hindi);
+                switch (selectedRadioId){
+                    case R.id.hindi:
+                        language = "0";
+                        break;
+                    case R.id.gujarati:
+                        language = "1";
+                        break;
+                    case R.id.english:
+                        language = "2";
+                        break;
+                    case R.id.marathi:
+                        language = "3";
+                        break;
+                    case R.id.punjabi:
+                        language = "4";
+                        break;
+                    case R.id.tamil:
+                        language = "5";
+                        break;
+                    case R.id.telugu:
+                        language = "6";
+                        break;
+                    case R.id.kannada:
+                        language = "7";
+                        break;
+                    case R.id.malayalam:
+                        language = "8";
+                        break;
+                    case R.id.bangla:
+                        language = "9";
+                        break;
+                }
+
+
+               SharedPreferences sharedPreferences= HomeActivity.this.getSharedPreferences("language",0);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString("lan",language);
+                editor.apply();
+                Log.d("devin","language code :::: "+language);
+
+                dialog.dismiss();
+
+                recreate();
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+                SharedPreferences.Editor editor1 = prefs.edit();
+                editor1.putInt("selectedRadioButtonId", radioGroup.getCheckedRadioButtonId());
+                editor1.apply();
+
+
+            }
+        });
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.Dialoganimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        dialog.show();
+
+
+
+    }
+
+
 }

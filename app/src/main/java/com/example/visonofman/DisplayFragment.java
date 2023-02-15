@@ -1,5 +1,6 @@
 package com.example.visonofman;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.visonofman.CustomClasses.Sharedprefrence_Language;
 import com.example.visonofman.ModelClass.DisplayVerse;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +33,7 @@ public class DisplayFragment extends Fragment {
     ArrayList<DisplayVerse> data =new ArrayList<>();
     TextView Verse,Translate,Description;
     ArrayList<String> list = new ArrayList<>();
+    String Language;
 
     public DisplayFragment(int chapter,int verse,int size) {
         this.chapter=chapter;
@@ -46,6 +49,18 @@ public class DisplayFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_display, container, false);
 
 
+//        Sharedprefrence_Language sharedprefrence_language= new Sharedprefrence_Language(getContext());
+//        String selectedLanguage = sharedprefrence_language.getString("lan","1");
+//        Log.d("dev","selectedLanguage :::  "+selectedLanguage);
+//        Language =selectedLanguage;
+//        sharedprefrence_language.clear();
+
+
+        SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
+        Language = sharedPreferences.getString("lan","0");
+        Log.d("dev","selectedLanguage :::  "+Language);
+
+
         Log.d("devin","chapter no and verse no"+chapter+" "+verse);
 
         Verse =view.findViewById(R.id.verse);
@@ -53,7 +68,7 @@ public class DisplayFragment extends Fragment {
         Description=view.findViewById(R.id.desc);
 
         firebaseDatabase= FirebaseDatabase.getInstance();
-        databaseReference =firebaseDatabase.getReference("data/languages/0/chapters/"+chapter+"/data/");
+        databaseReference =firebaseDatabase.getReference("data/languages/"+Language+"/chapters/"+chapter+"/data/");
 
         showData(verse);
 

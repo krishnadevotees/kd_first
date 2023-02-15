@@ -32,8 +32,7 @@ DatabaseReference databaseReference;
 Context context;
 private FragmentChaptersBinding binding;
 
-    public ChaptersFragment( ) {
-
+    public ChaptersFragment() {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

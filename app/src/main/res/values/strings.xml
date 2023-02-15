@@ -17,6 +17,20 @@
     <string name="title_languages">Languages </string>
     <string name="title_vom">Vison Of Man  </string>
     <string name="title_verse">Verse </string>
+    <string name="title_hindi">Hindi </string>
+    <string name="title_gujarati">Gujarati </string>
+    <string name="title_english">English </string>
+    <string name="title_marathi">Marathi </string>
+    <string name="title_punjabi">Punjabi </string>
+    <string name="title_tamil">Tamil </string>
+    <string name="title_telugu">Telugu </string>
+    <string name="title_kannada">Kannada </string>
+    <string name="title_malayalam">Malayalam </string>
+    <string name="title_bangla">Bangla </string>
+    <string name="cancle">Cancle</string>
+    <string name="ok">Ok</string>
+    <string name="title_chooselanguage">Choose Language </string>
+
 
 
     <string name="menu_home">Home</string>

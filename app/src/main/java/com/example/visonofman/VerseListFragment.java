@@ -1,7 +1,7 @@
 package com.example.visonofman;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +30,7 @@ public class VerseListFragment extends Fragment {
     RecyclerView recyclerView;
     Context context;
     int flag;
+    String Language;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<VerseList> data = new ArrayList<>();
@@ -53,11 +54,21 @@ public class VerseListFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_verse_list, container, false);
 
+//        Sharedprefrence_Language sharedprefrence_language= new Sharedprefrence_Language(getContext());
+//        String selectedLanguage = sharedprefrence_language.getString("lan","1");
+
+//        Language =selectedLanguage;
+//        sharedprefrence_language.clear();
+        SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
+        Language= sharedPreferences.getString("lan","0");
+        Log.d("dev","selectedLanguage :::  "+Language);
+
+
         recyclerView = root.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.hasFixedSize();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("data/languages/0/chapters/" + flag + "/data/");
+        databaseReference = firebaseDatabase.getReference("data/languages/"+Language+"/chapters/" + flag + "/data/");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

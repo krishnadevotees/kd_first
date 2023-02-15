@@ -22,4 +22,9 @@
     <style name="Theme.VisonOfMan.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.VisonOfMan.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    
+    <style name="Dialoganimation">
+        <item name="android:windowEnterAnimation" >@anim/bottam_dialog_slide_in</item>
+        <item name="android:windowExitAnimation" >@anim/bottam_dialog_slide_out</item>
+    </style>
 </resources>

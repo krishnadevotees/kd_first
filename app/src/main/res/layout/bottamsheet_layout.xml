@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_chooselanguage"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:elegantTextHeight="true"
+        android:elevation="20dp"
+        android:layout_margin="2dp"
+        />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:id="@+id/radioGroup"
+        android:elevation="10dp"
+        >
+
+        <RadioButton
+            android:id="@+id/hindi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_hindi" />
+
+        <RadioButton
+            android:id="@+id/gujarati"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_gujarati" />
+
+        <RadioButton
+            android:id="@+id/english"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_english" />
+
+        <RadioButton
+            android:id="@+id/marathi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_marathi" />
+
+        <RadioButton
+            android:id="@+id/punjabi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_punjabi" />
+
+        <RadioButton
+            android:id="@+id/tamil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_tamil" />
+
+        <RadioButton
+            android:id="@+id/telugu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_telugu" />
+
+        <RadioButton
+            android:id="@+id/kannada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_kannada" />
+
+        <RadioButton
+            android:id="@+id/malayalam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_malayalam" />
+
+        <RadioButton
+            android:id="@+id/bangla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_bangla" />
+    </RadioGroup>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+
+    <Button
+        android:id="@+id/cancle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:layout_margin="20dp"
+        android:elegantTextHeight="true"
+        android:elevation="20dp"
+        android:textColor="@color/black"
+        android:outlineAmbientShadowColor="@color/black"
+        android:text="@string/cancle" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:elegantTextHeight="true"
+        android:elevation="20dp"
+        android:layout_margin="20dp"
+        android:text="@string/ok" />
+</LinearLayout>
+
+</LinearLayout>

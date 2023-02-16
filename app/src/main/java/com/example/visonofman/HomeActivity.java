@@ -59,7 +59,7 @@ private ActivityHome2Binding binding;
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,R.id.nav_chapters,R.id.nav_language)
+                R.id.nav_home,R.id.nav_chapters)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
@@ -127,7 +127,7 @@ private ActivityHome2Binding binding;
 
         RadioGroup radioGroup= dialog.findViewById(R.id.radioGroup);
         Button okbutton = dialog.findViewById(R.id.ok);
-
+        Button cancle = dialog.findViewById(R.id.cancle);
 
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
@@ -201,6 +201,14 @@ private ActivityHome2Binding binding;
 
             }
         });
+
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
 
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

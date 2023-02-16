@@ -12,9 +12,9 @@
             android:id="@+id/nav_chapters"
             android:icon="@drawable/baseline_menu_chapter_24"
             android:title="@string/menu_chapter" />
-        <item
-            android:id="@+id/nav_language"
-            android:icon="@drawable/baseline_language_24"
-            android:title="@string/menu_languages" />
+<!--        <item-->
+<!--            android:id="@+id/nav_language"-->
+<!--            android:icon="@drawable/baseline_language_24"-->
+<!--            android:title="@string/menu_languages" />-->
     </group>
 </menu>

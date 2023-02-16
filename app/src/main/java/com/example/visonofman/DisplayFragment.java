@@ -1,11 +1,14 @@
 package com.example.visonofman;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DisplayFragment extends Fragment {
 
@@ -33,7 +37,10 @@ public class DisplayFragment extends Fragment {
     ArrayList<DisplayVerse> data =new ArrayList<>();
     TextView Verse,Translate,Description;
     ArrayList<String> list = new ArrayList<>();
+    FloatingActionButton play,stop;
     String Language;
+    String key1,key2,key3;
+    TextToSpeech textToSpeech;
 
     public DisplayFragment(int chapter,int verse,int size) {
         this.chapter=chapter;
@@ -43,17 +50,12 @@ public class DisplayFragment extends Fragment {
 
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_display, container, false);
 
-
-//        Sharedprefrence_Language sharedprefrence_language= new Sharedprefrence_Language(getContext());
-//        String selectedLanguage = sharedprefrence_language.getString("lan","1");
-//        Log.d("dev","selectedLanguage :::  "+selectedLanguage);
-//        Language =selectedLanguage;
-//        sharedprefrence_language.clear();
 
 
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
@@ -66,11 +68,71 @@ public class DisplayFragment extends Fragment {
         Verse =view.findViewById(R.id.verse);
         Translate=view.findViewById(R.id.translate);
         Description=view.findViewById(R.id.desc);
+        play=view.findViewById(R.id.playbtn);
+        stop=view.findViewById(R.id.stopbtn);
 
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference =firebaseDatabase.getReference("data/languages/"+Language+"/chapters/"+chapter+"/data/");
 
         showData(verse);
+
+
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS){
+                    textToSpeech.setLanguage(new Locale("sa_IN"));
+
+                    textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                        @Override
+                        public void onStart(String s) {
+
+                        }
+
+                        @Override
+                        public void onDone(String s) {
+
+                        }
+
+                        @Override
+                        public void onError(String s) {
+
+                        }
+                    });
+                }
+
+            }
+        });
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    textToSpeech.setSpeechRate(0.7f);
+                    textToSpeech.setLanguage(new Locale("hi"));
+
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SPEECH_ID");
+
+                    textToSpeech.speak(key1,TextToSpeech.QUEUE_FLUSH,params);
+
+                    play.setVisibility(View.GONE);
+                    stop.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textToSpeech.stop();
+                stop.setVisibility(View.GONE);
+                play.setVisibility(View.VISIBLE);
+            }
+        });
 
         FloatingActionButton nextfab= view.findViewById(R.id.right_fab);
 
@@ -100,8 +162,6 @@ public class DisplayFragment extends Fragment {
 
             }
         });
-
-
 
 
 
@@ -142,9 +202,9 @@ public class DisplayFragment extends Fragment {
                     Translate.setText("");
                     Description.setText("");
 
-                    String key1 = snapshot.child("VERSE").getValue(String.class);
-                    String key2 = snapshot.child("TRANSLATE").getValue(String.class);
-                    String key3 = snapshot.child("DESCRIPTION").getValue(String.class);
+                    key1 = snapshot.child("VERSE").getValue(String.class);
+                    key2 = snapshot.child("TRANSLATE").getValue(String.class);
+                    key3 = snapshot.child("DESCRIPTION").getValue(String.class);
 
                     Verse.setText(key1);
                     Translate.setText(key2);

@@ -7,69 +7,6 @@
     android:background="#FBC4C4"
     tools:context=".DisplayFragment">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/verse"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="116dp"-->
-    <!--        android:background="#FBC4C4"-->
-    <!--        android:gravity="center"-->
-    <!--        android:scrollbars="vertical"-->
-    <!--        android:text=""-->
-    <!--        android:textColor="@color/black"-->
-    <!--        android:textSize="20dp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:layout_margin="5dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.0"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:layout_constraintVertical_bias="0.0" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/translate"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="209dp"-->
-    <!--        android:background="#FBC4C4"-->
-    <!--        android:gravity="center"-->
-    <!--        android:scrollbars="vertical"-->
-    <!--        android:text=""-->
-    <!--        android:layout_margin="5dp"-->
-    <!--        android:textColor="@color/black"-->
-    <!--        android:textSize="18dp"-->
-    <!--        app:layout_constraintEnd_toEndOf="@+id/verse"-->
-    <!--        app:layout_constraintStart_toStartOf="@+id/verse"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/verse" />-->
-
-
-    <!--    <ScrollView-->
-    <!--        android:id="@+id/scrollView2"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="350dp"-->
-    <!--        android:paddingLeft="15dp"-->
-    <!--        android:paddingRight="15dp"-->
-    <!--        android:paddingEnd="20dp"-->
-    <!--        android:scrollbarSize="@dimen/cardview_compat_inset_shadow"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="1.0"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/translate">-->
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/desc"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_margin="5dp"-->
-    <!--            android:layout_marginTop="5dp"-->
-    <!--            android:gravity="center"-->
-    <!--            android:scrollbars="vertical"-->
-    <!--            android:text=""-->
-    <!--            android:textColor="@color/black"-->
-    <!--            android:textSize="15dp" />-->
-
-
-    <!--    </ScrollView>-->
-
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -200,9 +137,9 @@
         android:layout_marginBottom="32dp"
         android:contentDescription="next"
         android:src="@drawable/bx_right_arrow"
-        app:layout_constraintTop_toTopOf="@id/guideline3"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline3" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/left_fab"
@@ -214,9 +151,10 @@
         android:layout_marginBottom="32dp"
         android:contentDescription="next"
         android:src="@drawable/bx_left_arrow"
-        app:layout_constraintTop_toTopOf="@id/guideline3"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline3" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -224,6 +162,39 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="621dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/playbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="play"
+        android:src="@drawable/bx_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right_fab"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/left_fab"
+        app:layout_constraintTop_toTopOf="@id/guideline3"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/stopbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="play"
+        android:visibility="gone"
+        android:src="@drawable/baseline_stop_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right_fab"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/left_fab"
+        app:layout_constraintTop_toTopOf="@id/guideline3"
+        app:layout_constraintVertical_bias="1.0" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

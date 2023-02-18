@@ -1,4 +1,4 @@
-package com.example.visonofman;
+package com.example.visonofman.Activity;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -13,12 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.example.visonofman.CustomClasses.Sharedprefrence_Language;
+import com.example.visonofman.R;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +47,9 @@ private ActivityHome2Binding binding;
 
      binding = ActivityHome2Binding.inflate(getLayoutInflater());
      setContentView(binding.getRoot());
+
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
 
         FirebaseApp.initializeApp(this);

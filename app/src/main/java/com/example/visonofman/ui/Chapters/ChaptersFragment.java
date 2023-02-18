@@ -12,12 +12,10 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.visonofman.Adepters.CardView_Adepter;
-import com.example.visonofman.CustomClasses.SecondFragment;
 import com.example.visonofman.R;
-import com.example.visonofman.VerseActivity;
+import com.example.visonofman.Activity.VerseActivity;
 import com.example.visonofman.databinding.FragmentChaptersBinding;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

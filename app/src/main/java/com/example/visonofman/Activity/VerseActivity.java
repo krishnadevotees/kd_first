@@ -1,4 +1,4 @@
-package com.example.visonofman;
+package com.example.visonofman.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,6 +8,10 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.WindowManager;
+
+import com.example.visonofman.R;
+import com.example.visonofman.VerseListFragment;
 
 public class VerseActivity extends AppCompatActivity {
     int id;
@@ -16,6 +20,8 @@ public class VerseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verse);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

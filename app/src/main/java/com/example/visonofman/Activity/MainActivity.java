@@ -1,4 +1,4 @@
-package com.example.visonofman;
+package com.example.visonofman.Activity;
 
 import static android.app.PendingIntent.getActivity;
 
@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.visonofman.CustomClasses.SecondFragment;
+import com.example.visonofman.R;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -123,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         if (flag == 0){
             ft.add(R.id.container,fragment);
         }else{
-//            ft.replace(R.id.frame,fragment);
             ft.replace(R.id.container,fragment);
 
         }

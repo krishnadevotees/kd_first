@@ -38,17 +38,35 @@
         tools:layout="@layout/fragment_verse_list" />
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.example.visonofman.MainActivity"
+        android:name="com.example.visonofman.Activity.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
     <activity
         android:id="@+id/verseActivity"
-        android:name="com.example.visonofman.VerseActivity"
+        android:name="com.example.visonofman.Activity.VerseActivity"
         android:label="activity_verse"
         tools:layout="@layout/activity_verse" />
     <activity
         android:id="@+id/homeActivity"
-        android:name="com.example.visonofman.HomeActivity"
+        android:name="com.example.visonofman.Activity.HomeActivity"
         android:label="@string/title_vom"
         tools:layout="@layout/app_bar_home2" />
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.visonofman.SignupFragment"
+        android:label="fragment_signup"
+        tools:layout="@layout/fragment_signup" >
+        <action
+            android:id="@+id/action_signupFragment_to_signinFragment"
+            app:destination="@id/signinFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signinFragment"
+        android:name="com.example.visonofman.SigninFragment"
+        android:label="fragment_signin"
+        tools:layout="@layout/fragment_signin" >
+        <action
+            android:id="@+id/action_signinFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
+    </fragment>
 </navigation>

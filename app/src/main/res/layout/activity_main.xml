@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:id="@+id/dl"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
 
 
     <com.google.android.material.navigation.NavigationView

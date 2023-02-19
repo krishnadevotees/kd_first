@@ -1,6 +1,7 @@
 package com.example.visonofman.Activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,8 +18,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.visonofman.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -33,12 +40,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.visonofman.databinding.ActivityHome2Binding;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
 private ActivityHome2Binding binding;
+FirebaseAuth firebaseAuth;
+FirebaseUser firebaseUser;
+    GoogleSignInOptions googleSignInOptions;
+    GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +60,15 @@ private ActivityHome2Binding binding;
 
      binding = ActivityHome2Binding.inflate(getLayoutInflater());
      setContentView(binding.getRoot());
+     firebaseAuth = FirebaseAuth.getInstance();
+     firebaseUser  =firebaseAuth.getCurrentUser();
+
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
+
+//        if (firebaseUser != null){
+//            Toast.makeText(HomeActivity.this, "Log in as "+ firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
+//        }
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
@@ -68,6 +90,7 @@ private ActivityHome2Binding binding;
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
 
 
 
@@ -95,6 +118,24 @@ private ActivityHome2Binding binding;
         switch (item.getItemId()){
             case R.id.action_cLanguage:
                 showDialog();
+                break;
+            case R.id.logout:
+
+                FirebaseAuth.getInstance().signOut();
+
+                googleSignInClient.signOut().addOnCompleteListener(HomeActivity.this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+//                        Intent signInIntent = googleSignInClient.getSignInIntent();
+//                        startActivityForResult(signInIntent, 1);
+                        finish();
+
+                    }
+                });
+
+
+
                 break;
         }
         return super.onOptionsItemSelected(item);

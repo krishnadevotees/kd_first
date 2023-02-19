@@ -1,5 +1,6 @@
 package com.example.visonofman;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.visonofman.Activity.HomeActivity;
-import com.example.visonofman.ModelClass.user;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -22,8 +23,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -51,13 +50,21 @@ public class passFragment extends Fragment {
        signup=view.findViewById(R.id.signup);
        password=view.findViewById(R.id.editTextTextPassword);
 
+        Dialog loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.login_dialog);
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient= GoogleSignIn.getClient(getContext(),googleSignInOptions);
 
         signup.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
+
+                loadingDialog.show();
+                loadingDialog.setCancelable(false);
+
                 pass=password.getText().toString();
 
                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -81,12 +88,15 @@ public class passFragment extends Fragment {
                                     public void onSuccess(Void unused) {
                                         Log.d("firebase", "User added to Firestore");
                                         Intent intent=new Intent(getContext(), HomeActivity.class);
+                                        loadingDialog.dismiss();
+                                        Toast.makeText(getContext(), "Log in as "+ name, Toast.LENGTH_SHORT).show();
                                         startActivity(intent);
                                         getActivity().finish();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
+                                        loadingDialog.dismiss();
                                         Log.w("firebase", "Error adding user to Firestore", e);
                                     }
                                 });

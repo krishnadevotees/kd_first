@@ -1,33 +1,44 @@
 package com.example.visonofman;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.visonofman.Activity.HomeActivity;
-import com.example.visonofman.ModelClass.user;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class SignupFragment extends Fragment {
@@ -35,7 +46,9 @@ public class SignupFragment extends Fragment {
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     ImageView google;
-
+    Button signup;
+    EditText n, e, p;
+    String name, email, pass;
 
 
     public SignupFragment() {
@@ -43,25 +56,35 @@ public class SignupFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_signup, container, false);
+        View view = inflater.inflate(R.layout.fragment_signup, container, false);
+
+        n = view.findViewById(R.id.editTextTextPersonName);
+        e = view.findViewById(R.id.editTextTextEmailAddress);
+        p = view.findViewById(R.id.editTextTextPassword);
+        signup = view.findViewById(R.id.signup);
+
+        Dialog loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.login_dialog);
 
 
-        TextView signin =view.findViewById(R.id.signin);
-        signin.setOnClickListener(new View.OnClickListener() {
+
+        TextView signintv = view.findViewById(R.id.signin);
+        signintv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadfregment(new SigninFragment(),1);
+                loadfregment(new SigninFragment(), 1);
             }
         });
 
-        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        googleSignInClient= GoogleSignIn.getClient(getContext(),googleSignInOptions);
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
-        google=view.findViewById(R.id.imageView3);
+        google = view.findViewById(R.id.imageView3);
         google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,28 +93,142 @@ public class SignupFragment extends Fragment {
         });
 
 
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                name = n.getText().toString();
+                email = e.getText().toString();
+                pass = p.getText().toString();
+
+                if (isValidName(name) && isValidEmail(email) && isValidPassword(pass)) {
+
+                    loadingDialog.show();
+                    loadingDialog.setCancelable(false);
+
+                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+                    firebaseAuth.fetchSignInMethodsForEmail(email)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    List<String> signInMethods = task.getResult().getSignInMethods();
+                                    if (signInMethods == null || signInMethods.isEmpty()) {
+                                        
+                                        // Email is not registered
+                                        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                            @Override
+                                            public void onSuccess(AuthResult authResult) {
+
+                                                loadingDialog.dismiss();
+//                                                String displayName = email.substring(0, email.indexOf('@'));
+                                                
+                                                String userId = firebaseAuth.getCurrentUser().getUid();
+                                                Log.d("firebase", userId);
+                                                FirebaseUser user1 = firebaseAuth.getCurrentUser();
+
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                        .setDisplayName(name)
+                                                        .build();
+
+                                                user1.updateProfile(profileUpdates)
+                                                        .addOnCompleteListener(updateTask -> {
+                                                            if (updateTask.isSuccessful()) {
+                                                                // The user's display name has been updated.
+                                                            }
+                                                        });
+
+                                                Map<String, Object> user = new HashMap<>();
+                                                user.put("name", name);
+                                                user.put("email", email);
+                                                user.put("password", pass);
+
+                                                firestore.collection("users")
+                                                        .document(userId)
+                                                        .set(user)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+                                                                Log.d("firebase", "User added to Firestore");
+
+                                                                Intent intent = new Intent(getContext(), HomeActivity.class);
+                                                                startActivity(intent);
+                                                                loadingDialog.dismiss();
+                                                                getActivity().finish();
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                loadingDialog.dismiss();
+                                                                Log.w("firebase", "Error adding user to Firestore", e);
+                                                                Toast.makeText(getContext(), "Error in creating user !!!", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                            }
+                                        });
+                                        
+                                    } else {
+                                        // Email is already registered
+                                        e.setError("User already exists with this email");
+                                        Toast.makeText(getContext(), "User already exists with this email", Toast.LENGTH_SHORT).show();
+
+                                        loadingDialog.dismiss();
+                                    }
+                                } else {
+                                    // Some error occurred
+                                    loadingDialog.dismiss();
+                                    Toast.makeText(getContext(), "somthing wrong in signup ", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                } else {
+                    loadingDialog.dismiss();
+
+                    if (!isValidName(name) || name.isEmpty()) {
+                        n.requestFocus();
+                        n.setError("Please enter a valid Name");
+
+                    } else if (!isValidEmail(email) || email.isEmpty()) {
+                        e.requestFocus();
+                        e.setError("Please enter a valid Email");
+                    } else if (!isValidPassword(pass) || pass.isEmpty()) {
+                        p.requestFocus();
+                        p.setError("Please enter a valid Password and it should contain 6 letters");
+                    } else {
+                        n.setError(null);
+                        e.setError(null);
+                        p.setError(null);
+                        name = n.getText().toString();
+                        email = e.getText().toString();
+                        pass = p.getText().toString();
+                    }
+
+                }
 
 
+            }
+        });
 
 
         return view;
     }
 
-    void SignIn(){
-        Intent intent = googleSignInClient.getSignInIntent();
-        startActivityForResult(intent,1);
+    void SignIn() {
+                Intent intent = googleSignInClient.getSignInIntent();
+        startActivityForResult(intent, 1);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode ==1 ){
+        if (requestCode == 1) {
             Task<GoogleSignInAccount> t = GoogleSignIn.getSignedInAccountFromIntent(data);
 
+
             try {
-                GoogleSignInAccount account=t.getResult(ApiException.class);
+                GoogleSignInAccount account = t.getResult(ApiException.class);
                 String name = account.getDisplayName();
-                String email =account.getEmail();
+                String email = account.getEmail();
 
 
                 FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
@@ -101,36 +238,54 @@ public class SignupFragment extends Fragment {
                                 if (signInMethods == null || signInMethods.isEmpty()) {
                                     // User does not exist with this email, proceed with sign up
 
-                                    loadfregment(new passFragment(name,email),1);
+                                    loadfregment(new passFragment(name, email), 1);
 
 //                                    Intent intent=new Intent(getContext(), HomeActivity.class);
 //                                    startActivity(intent);
 //                                    getActivity().finish();
                                 } else {
                                     // User already exists with this email, show an error message
+                                    signInMethods.clear();
+
                                     Toast.makeText(getContext(), "User Already Exists ! Please Choose Another Email", Toast.LENGTH_SHORT).show();
+                                    signInMethods = task.getResult().getSignInMethods();
                                 }
                             } else {
                                 // Failed to check if user exists, handle the error
                                 // ...
+                                Toast.makeText(getContext(), "Somthing Went wrong !!! in result activity ", Toast.LENGTH_SHORT).show();
+
                             }
                         });
 
 
-                
             } catch (ApiException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
+    public boolean isValidName(String name) {
+        String regex = "^[a-zA-Z ]+$";
+        return name.matches(regex);
+    }
+
+    public boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public boolean isValidPassword(String password) {
+        return password.length() > 5;
+    }
+
+
     private void loadfregment(Fragment fragment, int flag) {
-        FragmentManager fm =getFragmentManager();
-        FragmentTransaction ft =fm.beginTransaction();
-        if (flag == 0){
-            ft.add(R.id.nav_host_fragment_login,fragment);
-        }else{
-            ft.replace(R.id.nav_host_fragment_login,fragment);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (flag == 0) {
+            ft.add(R.id.nav_host_fragment_login, fragment);
+        } else {
+            ft.replace(R.id.nav_host_fragment_login, fragment);
         }
         ft.commit();
     }

@@ -36,5 +36,6 @@
     <string name="menu_chapter">Chapters</string>
     <string name="menu_languages">Languages</string>
     <string name="menu_gallery">Gallery</string>
+    <string name="menu_profile">Profile</string>
     <string name="menu_slideshow">Slideshow</string>
 </resources>

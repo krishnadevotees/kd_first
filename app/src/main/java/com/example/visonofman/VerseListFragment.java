@@ -83,7 +83,7 @@ public class VerseListFragment extends Fragment {
 
                 for (int i = 0; i < list.size(); i++) {
                     int a = i + 1;
-                    data.add(new VerseList("verse " + a));
+                    data.add(new VerseList("श्लोक " + a));
                 }
                 Log.d("devin", "" + data.size());
                 adepter = new VerseListAdepter(getContext(), data, getFragmentManager(), flag);

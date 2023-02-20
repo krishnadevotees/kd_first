@@ -36,18 +36,17 @@ Context context;
 
 
         GoogleSignInAccount account=GoogleSignIn.getLastSignedInAccount(getContext());
-
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
         if (account != null){
             String name =account.getDisplayName();
             String email=account.getEmail();
-            binding.textHome.setText("User Namer and Email : \n \n"+name+"\n"+email);
+            binding.textHome.setText("User Namer and Email from Google: \n \n"+name+"\n"+email);
         }else if (user != null){
             String name =user.getDisplayName();
             String email =user.getEmail();
-            binding.textHome.setText("User Email : \n\n"+name+"\n"+email);
+            binding.textHome.setText("User Namer and Email from firebase auth : \n\n"+name+"\n"+email);
         }else {
             binding.textHome.setText("User Email : \n Error !!!");
         }

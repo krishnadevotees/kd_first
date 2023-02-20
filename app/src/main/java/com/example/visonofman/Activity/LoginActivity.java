@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,12 +15,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
-
+Dialog loadingDialog;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
+
+        loadingDialog = new Dialog(LoginActivity.this);
+        loadingDialog.setContentView(R.layout.login_dialog);
+
+
 
 // ...
 // Initialize Firebase Auth
@@ -50,13 +56,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null){
-//            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
-//            finish();
-//        }
-//    }
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null){
+            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+
+            finish();
+        }
+    }
 }

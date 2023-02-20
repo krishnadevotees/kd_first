@@ -1,10 +1,12 @@
 package com.example.visonofman;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.speech.tts.TextToSpeech;
@@ -198,6 +200,13 @@ public class DisplayFragment extends Fragment {
 
                 if (snapshot.exists()) {
 
+                    AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+                    // Set the title of the ActionBar
+                    if (activity != null) {
+                        activity.getSupportActionBar().setTitle("श्लोक  "+(index+1));
+                    }
+
                     Verse.setText("");
                     Translate.setText("");
                     Description.setText("");
@@ -214,9 +223,11 @@ public class DisplayFragment extends Fragment {
                     Log.d("Firebase", "Key 1 verse: " + key1);
                     Log.d("Firebase", "Key 2 translate: " + key2);
                     Log.d("Firebase", "Key 3 description: " + key3);
+                }
+
+
 
                 }
-            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w("Firebase", "Failed to read Next value.", error.toException());

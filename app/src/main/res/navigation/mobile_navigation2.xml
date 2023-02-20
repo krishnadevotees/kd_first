@@ -15,22 +15,13 @@
         android:id="@+id/nav_chapters"
         android:name="com.example.visonofman.ui.chapters.ChaptersFragment"
         android:label="@string/menu_chapter"
-        tools:layout="@layout/fragment_chapters" >
-        <action
-            android:id="@+id/action_nav_gallery_to_secondFragment2"
-            app:destination="@id/secondFragment2" />
-    </fragment>
+        tools:layout="@layout/fragment_chapters" />
 
     <fragment
-        android:id="@+id/nav_language"
-        android:name="com.example.visonofman.ui.language.LanguageFragment"
-        android:label="@string/menu_languages"
-        tools:layout="@layout/fragment_language" />
-    <fragment
-        android:id="@+id/secondFragment2"
-        android:name="com.example.visonofman.CustomClasses.SecondFragment"
-        android:label="fragment_second"
-        tools:layout="@layout/fragment_second" />
+        android:id="@+id/nav_profile"
+        android:name="com.example.visonofman.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/verseListFragment"
         android:name="com.example.visonofman.VerseListFragment"

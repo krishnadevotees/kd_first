@@ -131,7 +131,7 @@
             android:layout_height="45dp"
             android:layout_marginTop="28dp"
             android:backgroundTint="@color/white"
-            android:src="@drawable/bxl_google"
+            android:src="@drawable/icons_google"
             app:layout_constraintEnd_toEndOf="@+id/signup"
             app:layout_constraintStart_toStartOf="@+id/signup"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />

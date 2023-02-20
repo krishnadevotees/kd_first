@@ -2,21 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    android:id="@+id/nav_graph">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.visonofman.CustomClasses.HomeFragment"
-        android:label="home"
-        tools:layout="@layout/custom_home_fragment" >
-        <action
-            android:id="@+id/action_homeFragment_to_secondFragment"
-            app:destination="@id/secondFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/secondFragment"
-        android:name="com.example.visonofman.CustomClasses.SecondFragment"
-        android:label="verse_list"
-        tools:layout="@layout/fragment_second" />
+        android:id="@+id/profileFragment"
+        android:name="com.example.visonofman.ui.profile.ProfileFragment"
+        android:label="fragment_language"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

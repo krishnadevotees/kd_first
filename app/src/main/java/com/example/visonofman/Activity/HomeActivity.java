@@ -84,13 +84,14 @@ FirebaseUser firebaseUser;
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,R.id.nav_chapters)
+                R.id.nav_home,R.id.nav_chapters,R.id.nav_profile)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        binding.navView.setItemIconTintList(null);
 
 
 

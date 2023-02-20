@@ -105,6 +105,7 @@ public class SigninFragment extends Fragment {
                                     if (task.isSuccessful()){
                                         Toast.makeText(getContext(), "Password Reset Email sent ", Toast.LENGTH_SHORT).show();
                                         startTimer();
+                                        fp1.setVisibility(View.GONE);
                                         
                                     }
                                 }
@@ -136,8 +137,8 @@ public class SigninFragment extends Fragment {
                 if (isValidEmail(email) && isValidPassword(pass)) {
                     firebaseAuth = FirebaseAuth.getInstance();
 
-                    FirebaseFirestore firestore=FirebaseFirestore.getInstance();
-                    firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+//                    FirebaseFirestore firestore=FirebaseFirestore.getInstance();
+//                    firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
                     firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -151,7 +152,9 @@ public class SigninFragment extends Fragment {
                                 getActivity().finish();
                             } else {
                                 // Login failed
+                                loadingDialog.dismiss();
                                 Exception exception = task.getException();
+                                Toast.makeText(getContext(), "exception at oncomplete signin frag"+ exception, Toast.LENGTH_SHORT).show();
                                 Log.d("firebase", " signin exc ::::  " + exception);
                             }
                         }
@@ -195,7 +198,7 @@ public class SigninFragment extends Fragment {
     }
 
     public boolean isValidPassword(String password) {
-        return password.length() >= 5;
+        return password.length() > 5;
     }
 
     @Override
@@ -232,13 +235,14 @@ public class SigninFragment extends Fragment {
         ft.commit();
     }
     private void startTimer() {
-        new CountDownTimer(30000, 1000) {
+        new CountDownTimer(30000, 2000) {
             public void onTick(long millisUntilFinished) {
                 // Do nothing.
+                Toast.makeText(getContext(), "Please Wait 15 seconds ", Toast.LENGTH_SHORT).show();
             }
 
             public void onFinish() {
-
+                fp1.setVisibility(View.VISIBLE);
             }
         }.start();
     }

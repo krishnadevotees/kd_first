@@ -27,15 +27,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +54,9 @@ public class SignupFragment extends Fragment {
     Button signup;
     EditText n, e, p;
     String name, email, pass;
+    FirebaseFirestore firestore;
+    FirebaseAuth firebaseAuth;
+    Dialog loadingDialog;
 
 
     public SignupFragment() {
@@ -66,9 +74,11 @@ public class SignupFragment extends Fragment {
         p = view.findViewById(R.id.editTextTextPassword);
         signup = view.findViewById(R.id.signup);
 
-        Dialog loadingDialog = new Dialog(getContext());
+        loadingDialog = new Dialog(getContext());
         loadingDialog.setContentView(R.layout.login_dialog);
 
+        firestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
 
         TextView signintv = view.findViewById(R.id.signin);
@@ -79,16 +89,18 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
         google = view.findViewById(R.id.imageView3);
         google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .build();
+                googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
                 SignIn();
+//                FirebaseAuth.getInstance().signOut();
             }
         });
 
@@ -97,89 +109,89 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                loadingDialog.show();
+                loadingDialog.setCancelable(false);
+
                 name = n.getText().toString();
                 email = e.getText().toString();
                 pass = p.getText().toString();
 
                 if (isValidName(name) && isValidEmail(email) && isValidPassword(pass)) {
 
-                    loadingDialog.show();
-                    loadingDialog.setCancelable(false);
 
-                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                    createUser(email, pass, name);
 
-                    firebaseAuth.fetchSignInMethodsForEmail(email)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    List<String> signInMethods = task.getResult().getSignInMethods();
-                                    if (signInMethods == null || signInMethods.isEmpty()) {
-                                        
-                                        // Email is not registered
-                                        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                            @Override
-                                            public void onSuccess(AuthResult authResult) {
-
-                                                loadingDialog.dismiss();
-//                                                String displayName = email.substring(0, email.indexOf('@'));
-                                                
-                                                String userId = firebaseAuth.getCurrentUser().getUid();
-                                                Log.d("firebase", userId);
-                                                FirebaseUser user1 = firebaseAuth.getCurrentUser();
-
-                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                        .setDisplayName(name)
-                                                        .build();
-
-                                                user1.updateProfile(profileUpdates)
-                                                        .addOnCompleteListener(updateTask -> {
-                                                            if (updateTask.isSuccessful()) {
-                                                                // The user's display name has been updated.
-                                                            }
-                                                        });
-
-                                                Map<String, Object> user = new HashMap<>();
-                                                user.put("name", name);
-                                                user.put("email", email);
-                                                user.put("password", pass);
-
-                                                firestore.collection("users")
-                                                        .document(userId)
-                                                        .set(user)
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void unused) {
-                                                                Log.d("firebase", "User added to Firestore");
-
-                                                                Intent intent = new Intent(getContext(), HomeActivity.class);
-                                                                startActivity(intent);
-                                                                loadingDialog.dismiss();
-                                                                getActivity().finish();
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                loadingDialog.dismiss();
-                                                                Log.w("firebase", "Error adding user to Firestore", e);
-                                                                Toast.makeText(getContext(), "Error in creating user !!!", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                            }
-                                        });
-                                        
-                                    } else {
-                                        // Email is already registered
-                                        e.setError("User already exists with this email");
-                                        Toast.makeText(getContext(), "User already exists with this email", Toast.LENGTH_SHORT).show();
-
-                                        loadingDialog.dismiss();
-                                    }
-                                } else {
-                                    // Some error occurred
-                                    loadingDialog.dismiss();
-                                    Toast.makeText(getContext(), "somthing wrong in signup ", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+//                    firebaseAuth.fetchSignInMethodsForEmail(email)
+//                            .addOnCompleteListener(task -> {
+//                                if (task.isSuccessful()) {
+//                                    List<String> signInMethods = task.getResult().getSignInMethods();
+//                                    if (signInMethods == null || signInMethods.isEmpty()) {
+//
+//                                        // Email is not registered
+//                                        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+//                                            @Override
+//                                            public void onSuccess(AuthResult authResult) {
+//
+//                                                loadingDialog.dismiss();
+////                                                String displayName = email.substring(0, email.indexOf('@'));
+//
+//                                                String userId = firebaseAuth.getCurrentUser().getUid();
+//                                                Log.d("firebase", userId);
+//                                                FirebaseUser user1 = firebaseAuth.getCurrentUser();
+//
+//                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                                                        .setDisplayName(name)
+//                                                        .build();
+//
+//                                                user1.updateProfile(profileUpdates)
+//                                                        .addOnCompleteListener(updateTask -> {
+//                                                            if (updateTask.isSuccessful()) {
+//                                                                // The user's display name has been updated.
+//                                                            }
+//                                                        });
+//
+//                                                Map<String, Object> user = new HashMap<>();
+//                                                user.put("name", name);
+//                                                user.put("email", email);
+//                                                user.put("password", pass);
+//
+//                                                firestore.collection("users")
+//                                                        .document(userId)
+//                                                        .set(user)
+//                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                            @Override
+//                                                            public void onSuccess(Void unused) {
+//                                                                Log.d("firebase", "User added to Firestore");
+//
+//                                                                Intent intent = new Intent(getContext(), HomeActivity.class);
+//                                                                startActivity(intent);
+//                                                                loadingDialog.dismiss();
+//                                                                getActivity().finish();
+//                                                            }
+//                                                        }).addOnFailureListener(new OnFailureListener() {
+//                                                            @Override
+//                                                            public void onFailure(@NonNull Exception e) {
+//                                                                loadingDialog.dismiss();
+//                                                                Log.w("firebase", "Error adding user to Firestore", e);
+//                                                                Toast.makeText(getContext(), "Error in creating user !!!", Toast.LENGTH_SHORT).show();
+//                                                            }
+//                                                        });
+//                                            }
+//                                        });
+//
+//                                    } else {
+//                                        // Email is already registered
+//                                        e.setError("User already exists with this email");
+//                                        Toast.makeText(getContext(), "User already exists with this email", Toast.LENGTH_SHORT).show();
+//
+//                                        loadingDialog.dismiss();
+//                                    }
+//                                } else {
+//                                    // Some error occurred
+//                                    loadingDialog.dismiss();
+//                                    Toast.makeText(getContext(), "somthing wrong in signup ", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
 
                 } else {
                     loadingDialog.dismiss();
@@ -214,56 +226,142 @@ public class SignupFragment extends Fragment {
     }
 
     void SignIn() {
-                Intent intent = googleSignInClient.getSignInIntent();
+        Intent intent = googleSignInClient.getSignInIntent();
         startActivityForResult(intent, 1);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            Task<GoogleSignInAccount> t = GoogleSignIn.getSignedInAccountFromIntent(data);
+        if (resultCode != 0) {
+            if (requestCode == 1) {
+                Task<GoogleSignInAccount> t = GoogleSignIn.getSignedInAccountFromIntent(data);
 
 
-            try {
-                GoogleSignInAccount account = t.getResult(ApiException.class);
-                String name = account.getDisplayName();
-                String email = account.getEmail();
+                try {
+                    GoogleSignInAccount account = t.getResult(ApiException.class);
+                    String name = account.getDisplayName();
+                    String email = account.getEmail();
 
 
-                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                List<String> signInMethods = task.getResult().getSignInMethods();
-                                if (signInMethods == null || signInMethods.isEmpty()) {
-                                    // User does not exist with this email, proceed with sign up
+                    FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    List<String> signInMethods = task.getResult().getSignInMethods();
+                                    if (signInMethods == null || signInMethods.isEmpty()) {
+                                        // User does not exist with this email, proceed with sign up
 
-                                    loadfregment(new passFragment(name, email), 1);
+                                        loadfregment(new passFragment(name, email, account), 1);
 
-//                                    Intent intent=new Intent(getContext(), HomeActivity.class);
-//                                    startActivity(intent);
-//                                    getActivity().finish();
+                                    } else {
+                                        // User already exists with this email, show an error message
+                                        signInMethods.clear();
+
+                                        Toast.makeText(getContext(), "User Already Exists ! Please Choose Another Email", Toast.LENGTH_SHORT).show();
+
+                                    }
                                 } else {
-                                    // User already exists with this email, show an error message
-                                    signInMethods.clear();
+                                    // Failed to check if user exists, handle the error
 
-                                    Toast.makeText(getContext(), "User Already Exists ! Please Choose Another Email", Toast.LENGTH_SHORT).show();
-                                    signInMethods = task.getResult().getSignInMethods();
+                                    Toast.makeText(getContext(), "Somthing Went wrong !!! in result activity ", Toast.LENGTH_SHORT).show();
+
                                 }
-                            } else {
-                                // Failed to check if user exists, handle the error
-                                // ...
-                                Toast.makeText(getContext(), "Somthing Went wrong !!! in result activity ", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
+                            });
 
 
-            } catch (ApiException e) {
-                throw new RuntimeException(e);
+                } catch (ApiException e) {
+                    throw new RuntimeException(e);
+                }
             }
+        } else {
+
         }
+
     }
+
+    void createUser(String email, String pass, String name) {
+        firebaseAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> signInMethods = task.getResult().getSignInMethods();
+                        if (signInMethods == null || signInMethods.isEmpty()) {
+
+                            // Email is not registered
+                            firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+
+//                                    loadingDialog.dismiss();
+//                                                String displayName = email.substring(0, email.indexOf('@'));
+
+                                    String userId = firebaseAuth.getCurrentUser().getUid();
+                                    Log.d("firebase", userId);
+                                    FirebaseUser user1 = firebaseAuth.getCurrentUser();
+
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(name)
+                                            .build();
+
+                                    user1.updateProfile(profileUpdates)
+                                            .addOnCompleteListener(updateTask -> {
+                                                if (updateTask.isSuccessful()) {
+                                                    // The user's display name has been updated.
+                                                }
+                                            });
+
+
+                                    // Get the current date and time
+                                    Date now = new Date();
+                                    // Define a format for displaying the date and time
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    // Format the date and time using the defined format
+                                    String dateTimeString = sdf.format(now);
+
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("name", name);
+                                    user.put("email", email);
+                                    user.put("password", pass);
+                                    user.put("date", dateTimeString);
+
+                                    firestore.collection("users")
+                                            .document(userId)
+                                            .set(user)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Log.d("firebase", "User added to Firestore");
+
+                                                    Intent intent = new Intent(getContext(), HomeActivity.class);
+                                                    startActivity(intent);
+                                                    loadingDialog.dismiss();
+                                                    getActivity().finish();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    loadingDialog.dismiss();
+                                                    Log.w("firebase", "Error adding user to Firestore", e);
+                                                    Toast.makeText(getContext(), "Error in creating user !!!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                            });
+
+                        } else {
+                            // Email is already registered
+                            e.setError("User already exists with this email");
+                            Toast.makeText(getContext(), "User already exists with this email", Toast.LENGTH_SHORT).show();
+
+                            loadingDialog.dismiss();
+                        }
+                    } else {
+                        // Some error occurred
+                        loadingDialog.dismiss();
+                        Toast.makeText(getContext(), "somthing wrong in signup ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     public boolean isValidName(String name) {
         String regex = "^[a-zA-Z ]+$";

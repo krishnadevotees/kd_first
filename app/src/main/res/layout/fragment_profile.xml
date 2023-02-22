@@ -23,8 +23,8 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
-        android:maxWidth="150dp"
         android:layout_height="wrap_content"
+        android:maxWidth="150dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +50,9 @@
             android:id="@+id/profilr_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="250dp"
-            android:lines="2"
             android:layout_toEndOf="@+id/profile_image"
+            android:lines="2"
+            android:maxWidth="250dp"
             android:text=""
             android:textColor="@android:color/black"
             android:textSize="15sp"
@@ -75,12 +75,12 @@
         <TextView
             android:id="@+id/profile_bio"
             android:layout_width="wrap_content"
-            android:minWidth="250dp"
             android:layout_height="wrap_content"
-            android:text=""
-            android:layout_weight="2"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:minWidth="250dp"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
             tools:layout_editor_absoluteX="0dp"
@@ -90,8 +90,8 @@
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="10dp"
+            android:layout_weight="1"
             android:text="Edit" />
 
 

@@ -30,7 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
 
-private FragmentProfileBinding binding;
+    private FragmentProfileBinding binding;
 
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
@@ -39,11 +39,11 @@ private FragmentProfileBinding binding;
     Dialog loadingDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
 
-    binding = FragmentProfileBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
 
         loadingDialog = new Dialog(getContext());
@@ -54,21 +54,21 @@ private FragmentProfileBinding binding;
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
-        GoogleSignInAccount account=GoogleSignIn.getLastSignedInAccount(getContext());
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
 
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        FirebaseFirestore firestore=FirebaseFirestore.getInstance();
-        DocumentReference document=firestore.collection("users").document(user.getUid());
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        DocumentReference document = firestore.collection("users").document(user.getUid());
 
         document.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()){
-                    String name= documentSnapshot.getString("name");
-                    String email= documentSnapshot.getString("email");
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.getString("name");
+                    String email = documentSnapshot.getString("email");
                     binding.profileName.setText(name);
                     binding.profilrEmail.setText(email);
                     loadingDialog.dismiss();
@@ -90,8 +90,6 @@ private FragmentProfileBinding binding;
 //        }else {
 //            binding.profileName.setText("User Name Email : \n Error !!!");
 //        }
-
-
 
 
         return root;

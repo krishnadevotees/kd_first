@@ -38,6 +38,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.visonofman.databinding.ActivityHome2Binding;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,9 +48,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
-private ActivityHome2Binding binding;
-FirebaseAuth firebaseAuth;
-FirebaseUser firebaseUser;
+    private ActivityHome2Binding binding;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
 
@@ -58,10 +59,10 @@ FirebaseUser firebaseUser;
         super.onCreate(savedInstanceState);
 
 
-     binding = ActivityHome2Binding.inflate(getLayoutInflater());
-     setContentView(binding.getRoot());
-     firebaseAuth = FirebaseAuth.getInstance();
-     firebaseUser  =firebaseAuth.getCurrentUser();
+        binding = ActivityHome2Binding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
@@ -79,12 +80,12 @@ FirebaseUser firebaseUser;
 
         setSupportActionBar(binding.appBarHome2.toolbar1);
 
-         drawer = binding.drawerLayout;
+        drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,R.id.nav_chapters,R.id.nav_profile)
+                R.id.nav_home, R.id.nav_chapters, R.id.nav_profile)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
@@ -94,19 +95,20 @@ FirebaseUser firebaseUser;
         binding.navView.setItemIconTintList(null);
 
 
-
     }
-    private void showFragment(Fragment fragment,int flag) {
+
+    private void showFragment(Fragment fragment, int flag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (flag == 0 ){
+        if (flag == 0) {
             transaction.add(R.id.nav_host_fragment_content_home2, fragment);
-        }else {
+        } else {
             transaction.replace(R.id.nav_host_fragment_content_home2, fragment);
 
         }
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -116,25 +118,25 @@ FirebaseUser firebaseUser;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_cLanguage:
                 showDialog();
                 break;
             case R.id.logout:
 
                 FirebaseAuth.getInstance().signOut();
+                finish();
 
-                googleSignInClient.signOut().addOnCompleteListener(HomeActivity.this, new OnCompleteListener<Void>() {
+                googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+                        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
 //                        Intent signInIntent = googleSignInClient.getSignInIntent();
 //                        startActivityForResult(signInIntent, 1);
                         finish();
 
                     }
                 });
-
 
 
                 break;
@@ -145,12 +147,11 @@ FirebaseUser firebaseUser;
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (count == 1){
+        } else if (count == 1) {
             finish();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -162,15 +163,14 @@ FirebaseUser firebaseUser;
                 || super.onSupportNavigateUp();
 
     }
-    public void showDialog(){
+
+    public void showDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
         dialog.setContentView(R.layout.bottamsheet_layout);
 
 
-
-
-        RadioGroup radioGroup= dialog.findViewById(R.id.radioGroup);
+        RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
         Button okbutton = dialog.findViewById(R.id.ok);
         Button cancle = dialog.findViewById(R.id.cancle);
 
@@ -186,14 +186,14 @@ FirebaseUser firebaseUser;
         okbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String language = ""; 
+                String language = "";
 
                 int selectedRadioId = radioGroup.getCheckedRadioButtonId();
-                if (selectedRadioId == -1 ){
+                if (selectedRadioId == -1) {
                     return;
                 }
-                Log.d("dev",selectedRadioId+"  :::::  "+R.id.hindi);
-                switch (selectedRadioId){
+                Log.d("dev", selectedRadioId + "  :::::  " + R.id.hindi);
+                switch (selectedRadioId) {
                     case R.id.hindi:
                         language = "0";
                         break;
@@ -227,12 +227,12 @@ FirebaseUser firebaseUser;
                 }
 
 
-               SharedPreferences sharedPreferences= HomeActivity.this.getSharedPreferences("language",0);
+                SharedPreferences sharedPreferences = HomeActivity.this.getSharedPreferences("language", 0);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putString("lan",language);
+                editor.putString("lan", language);
                 editor.apply();
-                Log.d("devin","language code :::: "+language);
+                Log.d("devin", "language code :::: " + language);
 
                 dialog.dismiss();
 
@@ -255,12 +255,11 @@ FirebaseUser firebaseUser;
         });
 
 
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.Dialoganimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.show();
-
 
 
     }

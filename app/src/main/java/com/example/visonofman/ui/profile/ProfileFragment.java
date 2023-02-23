@@ -102,16 +102,5 @@ public class ProfileFragment extends Fragment {
         binding = null;
     }
 
-//    public void showDialog(){
-//        final Dialog dialog = new Dialog(getContext());
-//        dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-//        dialog.setContentView(R.layout.bottamsheet_layout);
-//
-//        dialog.show();
-//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.Dialoganimation;
-//        dialog.getWindow().setGravity(Gravity.BOTTOM);
-//
-//    }
+
 }

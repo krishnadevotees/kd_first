@@ -60,4 +60,9 @@
             android:id="@+id/action_signinFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/fav_Fragment"
+        android:name="com.example.visonofman.ui.favrate.fav_Fragment"
+        android:label="fragment_fav_"
+        tools:layout="@layout/fragment_fav_" />
 </navigation>

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.visonofman.R;
 import com.example.visonofman.SigninFragment;
@@ -33,6 +34,9 @@ public class LoginActivity extends AppCompatActivity {
 // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         loadfregment(new SigninFragment(), 0);
+
+
+//        Toast.makeText(this, " "+mAuth.getCurrentUser(), Toast.LENGTH_SHORT).show();
 
 
     }

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1073080682434",
+    "firebase_url": "https://krishnadevotees-2c80f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "krishnadevotees-2c80f",
+    "storage_bucket": "krishnadevotees-2c80f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073080682434:android:5d83d887f9c880322cf85b",
+        "android_client_info": {
+          "package_name": "com.example.visonofman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073080682434-e9g7ig4i0p1r2gs4of9rb6l77etr33hf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.visonofman",
+            "certificate_hash": "249e0a16e3e099826a04d7d54a51a7ea47386dda"
+          }
+        },
+        {
+          "client_id": "1073080682434-rcgp3sjioqtr1ivkfjtrvk16nndraq6p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPS1MYObC9rZExJLS7PiAlTh7Le4wvkSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073080682434-j432hd0r6f56cuvmvt3kj2phmpcbot2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

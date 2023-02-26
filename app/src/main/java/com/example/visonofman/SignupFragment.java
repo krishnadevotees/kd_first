@@ -100,7 +100,7 @@ public class SignupFragment extends Fragment {
                         .build();
                 googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
                 SignIn();
-//                FirebaseAuth.getInstance().signOut();
+
             }
         });
 
@@ -321,6 +321,8 @@ public class SignupFragment extends Fragment {
                                     user.put("name", name);
                                     user.put("email", email);
                                     user.put("password", pass);
+                                    user.put("image", "");
+                                    user.put("desc", "");
                                     user.put("date", dateTimeString);
 
                                     firestore.collection("users")

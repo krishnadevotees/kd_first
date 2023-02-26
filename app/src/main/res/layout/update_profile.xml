@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg">
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Update Profile"
+    android:textSize="20dp"
+    android:textColor="@color/black"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:elegantTextHeight="true"
+    android:elevation="20dp"
+    android:layout_margin="2dp"
+
+    />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/image_updateProfile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/pnguser"
+                android:layout_marginStart="10dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"/>
+
+
+            <Button
+                android:id="@+id/browse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="80dp"
+                android:background="@android:color/transparent"
+                android:text="Browse Image"
+                android:textColor="@color/black"
+
+                />
+
+        </LinearLayout>
+
+<!--    <EditText-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:ems="10"-->
+<!--        android:id="@+id/name"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:hint="Name"-->
+<!--        android:paddingStart="20sp"-->
+<!--        android:minHeight="48dp"-->
+<!--        android:background="@drawable/bg_edittext"-->
+<!--        android:inputType="text"-->
+<!--        android:textColorHint="@color/black" />-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout"
+        android:layout_width="match_parent"
+
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:hint="Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout2"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:hint="Email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout3"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:hint="Bio">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+<!--    <EditText-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:ems="10"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:hint="Email"-->
+<!--        android:paddingStart="20sp"-->
+<!--        android:id="@+id/email"-->
+<!--        android:background="@drawable/bg_edittext"-->
+<!--        android:minHeight="48dp"-->
+<!--        android:inputType="textEmailAddress"-->
+<!--        android:textColorHint="@color/black"/>-->
+
+<!--    <EditText-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:ems="10"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:hint="Bio"-->
+<!--        android:id="@+id/desc"-->
+<!--        android:paddingStart="20sp"-->
+<!--        android:background="@drawable/bg_edittext"-->
+<!--        android:minHeight="48dp"-->
+<!--        android:inputType="textMultiLine"-->
+<!--        android:textColorHint="@color/black"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:layout_margin="20dp"
+            android:elegantTextHeight="true"
+            android:elevation="20dp"
+            android:textColor="@color/black"
+            android:outlineAmbientShadowColor="@color/black"
+            android:text="@string/cancle" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:elegantTextHeight="true"
+            android:elevation="20dp"
+            android:text="@string/update"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+</LinearLayout>

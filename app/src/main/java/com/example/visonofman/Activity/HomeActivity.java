@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.visonofman.R;
@@ -25,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
@@ -43,6 +46,12 @@ import com.example.visonofman.databinding.ActivityHome2Binding;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
+
+import java.io.InputStream;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -51,6 +60,8 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHome2Binding binding;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
+    FirebaseFirestore firestore;
+
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
 
@@ -63,25 +74,44 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        firestore = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = firestore.collection("users").document(firebaseUser.getUid());
+Log.d("firebase",firebaseUser.getUid());
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
 
-//        if (firebaseUser != null){
-//            Toast.makeText(HomeActivity.this, "Log in as "+ firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
-//        }
-
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-
         FirebaseApp.initializeApp(this);
-
 
         setSupportActionBar(binding.appBarHome2.toolbar1);
 
         drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+
+        View headerview = navigationView.getHeaderView(0);
+        ImageView imageView=headerview.findViewById(R.id.image);
+        TextView name =headerview.findViewById(R.id.name);
+        TextView email =headerview.findViewById(R.id.email);
+
+
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    name.setText(documentSnapshot.getString("name"));
+                    email.setText(documentSnapshot.getString("email"));
+                    if (documentSnapshot.getString("image") != ""){
+                        Picasso.get().load(documentSnapshot.getString("image")).into(imageView);
+                    }
+                }
+            }
+        });
+//        if (firebaseUser.getPhotoUrl() != null){
+//            Picasso.get().load(firebaseUser.getPhotoUrl()).into(imageView);
+//        }
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -244,8 +274,10 @@ public class HomeActivity extends AppCompatActivity {
                 editor1.apply();
 
 
+
             }
         });
+
 
         cancle.setOnClickListener(new View.OnClickListener() {
             @Override

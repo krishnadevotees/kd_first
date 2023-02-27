@@ -65,4 +65,14 @@
         android:name="com.example.visonofman.ui.favrate.fav_Fragment"
         android:label="fragment_fav_"
         tools:layout="@layout/fragment_fav_" />
+    <fragment
+        android:id="@+id/passFragment"
+        android:name="com.example.visonofman.passFragment"
+        android:label="fragment_pass"
+        tools:layout="@layout/fragment_pass" />
+    <fragment
+        android:id="@+id/displayFragment"
+        android:name="com.example.visonofman.DisplayFragment"
+        android:label="fragment_display"
+        tools:layout="@layout/fragment_display" />
 </navigation>

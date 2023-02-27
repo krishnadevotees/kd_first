@@ -29,6 +29,8 @@
     <string name="title_bangla">Bangla </string>
     <string name="cancle">Cancle</string>
     <string name="ok">Ok</string>
+    <string name="selectadhyay">Select Adhyay</string>
+    <string name="selectsloka">Select Sloka</string>
     <string name="update">Update</string>
     <string name="title_chooselanguage">Choose Language </string>
 
@@ -39,4 +41,5 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="spinner">spinner</string>
 </resources>

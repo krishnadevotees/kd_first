@@ -210,6 +210,8 @@ Log.d("firebase",firebaseUser.getUid());
         if (selectedRadioButtonId != -1) {
             RadioButton selectedRadioButton = dialog.findViewById(selectedRadioButtonId);
             selectedRadioButton.setChecked(true);
+        }else {
+            Toast.makeText(this, "error ", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -264,16 +266,17 @@ Log.d("firebase",firebaseUser.getUid());
                 editor.apply();
                 Log.d("devin", "language code :::: " + language);
 
-                dialog.dismiss();
-
-                recreate();
+               
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
                 SharedPreferences.Editor editor1 = prefs.edit();
                 editor1.putInt("selectedRadioButtonId", radioGroup.getCheckedRadioButtonId());
                 editor1.apply();
 
+                dialog.dismiss();
 
+                recreate();
+                Toast.makeText(HomeActivity.this, "Language Changed ", Toast.LENGTH_SHORT).show();
 
             }
         });

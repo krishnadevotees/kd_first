@@ -93,7 +93,8 @@ public class DisplayFragment extends Fragment {
 
                         @Override
                         public void onDone(String s) {
-
+                            stop.setVisibility(View.GONE);
+                            play.setVisibility(View.VISIBLE);
                         }
 
                         @Override

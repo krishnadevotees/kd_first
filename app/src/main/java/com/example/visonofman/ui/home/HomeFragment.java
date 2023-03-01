@@ -40,8 +40,8 @@ public class HomeFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     String Language;
-    ArrayList<String> adhyay ;
-    ArrayList<String> sloka ;
+    ArrayList<String> adhyay =new ArrayList<>();
+    ArrayList<String> sloka =new ArrayList<>();
     private int spinner1Selection = -1;
     private int spinner2Selection = -1;
     AutoCompleteTextView textView1;
@@ -56,16 +56,14 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        textView1=root.findViewById(R.id.auto_complete_txt_ch);
-        textView2=root.findViewById(R.id.auto_complete_txt_sloka);
+        textView1=binding.autoCompleteTxtCh;
+        textView2=binding.autoCompleteTxtSloka;
 
-        adhyay =new ArrayList<>();
-        sloka =new ArrayList<>();
 
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
         Language= sharedPreferences.getString("lan","0");
         Log.d("dev","selectedLanguage :::  "+Language);
-        Toast.makeText(getContext(), "language "+Language, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "language "+Language, Toast.LENGTH_SHORT).show();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference("data/languages/");
@@ -78,11 +76,12 @@ public class HomeFragment extends Fragment {
                     i++;
                     Log.d("devin", String.valueOf(snapshot.getChildren()));
                 }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getContext(), "database refrence error oncancle", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,7 +90,7 @@ public class HomeFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             textView1.setAdapter(adapter);
 
-            adhyay.clear();
+
 
         binding.autoCompleteTxtSloka.setEnabled(false);
         binding.autoCompleteTxtCh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,7 +98,7 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 pch=position;
-                Toast.makeText(getContext(),"Item: "+item+" position "+position,Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(),"Item: "+item+" position "+position,Toast.LENGTH_SHORT).show();
                 if (item != null){
                     binding.autoCompleteTxtSloka.setEnabled(true);
 
@@ -137,6 +136,7 @@ public class HomeFragment extends Fragment {
                             if (item2 != null){
                                 //replace frag with item 2 params
                                 showFragment(new Display2Fragment(i),3);
+
                             }
                         }
                     });
@@ -148,7 +148,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
 
 
 

@@ -13,6 +13,9 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -57,7 +60,7 @@ public class DisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_display, container, false);
-
+        setHasOptionsMenu(true);
 
 
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
@@ -93,8 +96,7 @@ public class DisplayFragment extends Fragment {
 
                         @Override
                         public void onDone(String s) {
-                            stop.setVisibility(View.GONE);
-                            play.setVisibility(View.VISIBLE);
+
                         }
 
                         @Override
@@ -235,5 +237,17 @@ public class DisplayFragment extends Fragment {
             }
         });
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.custom_menu, menu);
+        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
+        favoriteMenuItem.setVisible(true);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public void onDestroyView() {
+        key1=key2=key3 =null;
+        super.onDestroyView();
+    }
 }

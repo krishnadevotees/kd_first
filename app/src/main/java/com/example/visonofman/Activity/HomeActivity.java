@@ -205,7 +205,7 @@ Log.d("firebase",firebaseUser.getUid());
         Button cancle = dialog.findViewById(R.id.cancle);
 
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+        SharedPreferences prefs =  HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
         int selectedRadioButtonId = prefs.getInt("selectedRadioButtonId", -1);
         if (selectedRadioButtonId != -1) {
             RadioButton selectedRadioButton = dialog.findViewById(selectedRadioButtonId);
@@ -268,7 +268,7 @@ Log.d("firebase",firebaseUser.getUid());
 
                
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+                SharedPreferences prefs =  HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
                 SharedPreferences.Editor editor1 = prefs.edit();
                 editor1.putInt("selectedRadioButtonId", radioGroup.getCheckedRadioButtonId());
                 editor1.apply();

@@ -17,7 +17,7 @@
         android:fitsSystemWindows="true"
         android:id="@+id/navview"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu"
+        app:menu="@menu/custom_menu"
         />
 
 

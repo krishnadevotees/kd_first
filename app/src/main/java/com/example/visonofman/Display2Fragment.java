@@ -29,4 +29,9 @@ public class Display2Fragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+//        getActivity().recreate();
+        super.onDestroyView();
+    }
 }

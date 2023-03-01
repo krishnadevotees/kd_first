@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -53,6 +56,8 @@ public class VerseListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_verse_list, container, false);
+        setHasOptionsMenu(true);
+
 
 //        Sharedprefrence_Language sharedprefrence_language= new Sharedprefrence_Language(getContext());
 //        String selectedLanguage = sharedprefrence_language.getString("lan","1");
@@ -109,6 +114,15 @@ public class VerseListFragment extends Fragment {
 
         return root;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.custom_menu, menu);
+        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
+        favoriteMenuItem.setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 
     @Override
     public void onResume() {

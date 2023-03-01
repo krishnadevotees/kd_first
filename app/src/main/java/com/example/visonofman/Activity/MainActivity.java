@@ -68,34 +68,34 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawers();
 
                 Log.d("devin",""+item.getItemId());
-                switch (item.getItemId()){
-                    case R.id.home:
-                        loadfregment(new SecondFragment(MainActivity.this,1),1);
-                        Toast.makeText(MainActivity.this, "HOME", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.chapters:
-                        loadfregment(new SecondFragment(MainActivity.this,1),1);
-                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.fav_sloka:
+//                switch (item.getItemId()){
+//                    case R.id.home:
 //                        loadfregment(new SecondFragment(MainActivity.this,1),1);
-                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.verseoftheday:
+//                        Toast.makeText(MainActivity.this, "HOME", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case R.id.chapters:
 //                        loadfregment(new SecondFragment(MainActivity.this,1),1);
-                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.logout:
-//                        loadfregment(new SecondFragment(MainActivity.this,1),1);
-                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.dm_language:
-                        Toast.makeText(MainActivity.this, "language", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.setting:
-                        Toast.makeText(MainActivity.this, "setting", Toast.LENGTH_SHORT).show();
-                        break;
-                }
+//                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case R.id.fav_sloka:
+////                        loadfregment(new SecondFragment(MainActivity.this,1),1);
+//                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case R.id.verseoftheday:
+////                        loadfregment(new SecondFragment(MainActivity.this,1),1);
+//                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case R.id.logout:
+////                        loadfregment(new SecondFragment(MainActivity.this,1),1);
+//                        Toast.makeText(MainActivity.this, "Chapter", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case R.id.dm_language:
+//                        Toast.makeText(MainActivity.this, "language", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case R.id.setting:
+//                        Toast.makeText(MainActivity.this, "setting", Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
                 return true;
             }
         });

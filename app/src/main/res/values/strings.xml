@@ -42,4 +42,10 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="spinner">spinner</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="browse_image">Browse Image</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="bio">Bio</string>
+    <string name="edit">Edit</string>
 </resources>

@@ -18,5 +18,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/mobile_navigation2"
-    />
+        tools:ignore="FragmentTagUsage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

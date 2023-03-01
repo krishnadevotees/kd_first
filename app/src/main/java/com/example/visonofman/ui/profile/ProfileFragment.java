@@ -79,6 +79,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        uri= Uri.parse("");
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -242,10 +243,13 @@ public class ProfileFragment extends Fragment {
         } else {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage",0);
             String uriString = sharedPreferences.getString("imageUri", null);
-            uri = Uri.parse(uriString);
+            if (uriString!=null){
+                uri = Uri.parse(uriString);
+            }
+
         }
 
-        reference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        reference.putFile(uri,null,uri2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 

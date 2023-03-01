@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F19E9E"
+    android:background="#9A9A9A"
     tools:context=".ui.profile.ProfileFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         >
 
@@ -99,7 +99,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout">
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout"
+            tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profilr_email"
@@ -188,7 +189,7 @@
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
             android:backgroundTint="#3E50EA"
-            android:text="Edit"
+            android:text="@string/edit"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.765"

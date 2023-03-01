@@ -3,10 +3,12 @@ package com.example.visonofman;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.speech.tts.TextToSpeech;
@@ -46,6 +48,7 @@ public class DisplayFragment extends Fragment {
     String Language;
     String key1,key2,key3;
     TextToSpeech textToSpeech;
+    private boolean isPlaying = false;
 
     public DisplayFragment(int chapter,int verse,int size) {
         this.chapter=chapter;
@@ -74,7 +77,7 @@ public class DisplayFragment extends Fragment {
         Translate=view.findViewById(R.id.translate);
         Description=view.findViewById(R.id.desc);
         play=view.findViewById(R.id.playbtn);
-        stop=view.findViewById(R.id.stopbtn);
+
 
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference =firebaseDatabase.getReference("data/languages/"+Language+"/chapters/"+chapter+"/data/");
@@ -88,6 +91,33 @@ public class DisplayFragment extends Fragment {
                 if (i == TextToSpeech.SUCCESS){
                     textToSpeech.setLanguage(new Locale("sa_IN"));
 
+                }
+
+
+            }
+        });
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlaying) {
+                    textToSpeech.stop();
+                    Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.bx_play, null);
+                    play.setImageDrawable(myDrawable);
+                    isPlaying = false;
+                } else {
+
+                    textToSpeech.setSpeechRate(0.7f);
+                    textToSpeech.setLanguage(new Locale("hi"));
+
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SPEECH_ID");
+
+                    textToSpeech.speak(key1,TextToSpeech.QUEUE_FLUSH,params);
+
+                    Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_stop_24, null);
+                    play.setImageDrawable(myDrawable);
+                    isPlaying = true;
                     textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                         @Override
                         public void onStart(String s) {
@@ -97,6 +127,9 @@ public class DisplayFragment extends Fragment {
                         @Override
                         public void onDone(String s) {
 
+                            Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.bx_play, null);
+                            play.setImageDrawable(myDrawable);
+                            isPlaying = false;
                         }
 
                         @Override
@@ -106,36 +139,7 @@ public class DisplayFragment extends Fragment {
                     });
                 }
 
-            }
-        });
 
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                    textToSpeech.setSpeechRate(0.7f);
-                    textToSpeech.setLanguage(new Locale("hi"));
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SPEECH_ID");
-
-                    textToSpeech.speak(key1,TextToSpeech.QUEUE_FLUSH,params);
-
-                    play.setVisibility(View.GONE);
-                    stop.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-
-
-
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textToSpeech.stop();
-                stop.setVisibility(View.GONE);
-                play.setVisibility(View.VISIBLE);
             }
         });
 
@@ -145,6 +149,12 @@ public class DisplayFragment extends Fragment {
         nextfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                textToSpeech.stop();
+                Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.bx_play, null);
+                play.setImageDrawable(myDrawable);
+                isPlaying = false;
+
+
                 int next = verse + 1;
                 prevfab.setVisibility(View.VISIBLE);
                 if (verse < size -1 ){
@@ -173,6 +183,11 @@ public class DisplayFragment extends Fragment {
         prevfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                textToSpeech.stop();
+                Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.bx_play, null);
+                play.setImageDrawable(myDrawable);
+                isPlaying = false;
+
                 nextfab.setVisibility(View.VISIBLE);
                 int next = verse - 1;
 
@@ -248,6 +263,7 @@ public class DisplayFragment extends Fragment {
     @Override
     public void onDestroyView() {
         key1=key2=key3 =null;
+        textToSpeech.shutdown();
         super.onDestroyView();
     }
 }

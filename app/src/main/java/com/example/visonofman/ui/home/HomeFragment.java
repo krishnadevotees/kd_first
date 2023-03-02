@@ -56,8 +56,8 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        textView1=binding.autoCompleteTxtCh;
-        textView2=binding.autoCompleteTxtSloka;
+//        textView1=binding.autoCompleteTxtCh;
+//        textView2=binding.autoCompleteTxtSloka;
 
 
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
@@ -86,107 +86,107 @@ public class HomeFragment extends Fragment {
         });
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, adhyay);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-            textView1.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, adhyay);
+//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+//            textView1.setAdapter(adapter);
 
 
-
-        binding.autoCompleteTxtSloka.setEnabled(false);
-        binding.autoCompleteTxtCh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                pch=position;
-//                Toast.makeText(getContext(),"Item: "+item+" position "+position,Toast.LENGTH_SHORT).show();
-                if (item != null){
-                    binding.autoCompleteTxtSloka.setEnabled(true);
-
-
-
-                    databaseReference.child(Language+"/chapters/"+position+ "/data/").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int i=1;
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                sloka.add("Sloka "+i);
-                                i++;
-                                Log.d("devin", String.valueOf(snapshot.getChildren()));
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, sloka);
-                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-                        textView2.setAdapter(adapter);
+//
+//        binding.autoCompleteTxtSloka.setEnabled(false);
+//        binding.autoCompleteTxtCh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String item = parent.getItemAtPosition(position).toString();
+//                pch=position;
+////                Toast.makeText(getContext(),"Item: "+item+" position "+position,Toast.LENGTH_SHORT).show();
+//                if (item != null){
+//                    binding.autoCompleteTxtSloka.setEnabled(true);
 
 
-                     sloka.clear();//clear if it is not used
-
-                    binding.autoCompleteTxtSloka.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            String item2 = adapterView.getItemAtPosition(i).toString();
-                            psl=i;
-                            if (item2 != null){
-                                //replace frag with item 2 params
-                                showFragment(new Display2Fragment(i),3);
-
-                            }
-                        }
-                    });
-
-
-
-
-
-                }
-            }
-        });
+//
+//                    databaseReference.child(Language+"/chapters/"+position+ "/data/").addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            int i=1;
+//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                                sloka.add("Sloka "+i);
+//                                i++;
+//                                Log.d("devin", String.valueOf(snapshot.getChildren()));
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+//
+//                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, sloka);
+//                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+//                        textView2.setAdapter(adapter);
+//
+//
+//                     sloka.clear();//clear if it is not used
+//
+//                    binding.autoCompleteTxtSloka.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                            String item2 = adapterView.getItemAtPosition(i).toString();
+//                            psl=i;
+//                            if (item2 != null){
+//                                //replace frag with item 2 params
+//                                showFragment(new Display2Fragment(i),3);
+//
+//                            }
+//                        }
+//                    });
+//
+//
+//
+//
+//
+//                }
+//            }
+//        });
 
 
 
         return root;
     }
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save the selected item and options for spinner1
-        outState.putInt("spinner1Selection", pch);
-        outState.putStringArrayList("spinner1Options", new ArrayList<>(adhyay));
-
-        // Save the selected item and options for spinner2
-        outState.putInt("spinner2Selection", psl);
-        outState.putStringArrayList("spinner2Options", new ArrayList<>(sloka));
-    }
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore the selected item and options for spinner1
-            spinner1Selection = savedInstanceState.getInt("spinner1Selection", -1);
-            adhyay = savedInstanceState.getStringArrayList("spinner1Options");
-            ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, adhyay);
-            textView1.setAdapter(adapter1);
-            if (spinner1Selection >= 0) {
-                textView1.setSelection(spinner1Selection);
-            }
-
-            // Restore the selected item and options for spinner2
-            spinner2Selection = savedInstanceState.getInt("spinner2Selection", -1);
-            sloka = savedInstanceState.getStringArrayList("spinner2Options");
-            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, sloka);
-            textView2.setAdapter(adapter2);
-            if (spinner2Selection >= 0) {
-                textView2.setSelection(spinner2Selection);
-            }
-        }
-    }
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        // Save the selected item and options for spinner1
+//        outState.putInt("spinner1Selection", pch);
+//        outState.putStringArrayList("spinner1Options", new ArrayList<>(adhyay));
+//
+//        // Save the selected item and options for spinner2
+//        outState.putInt("spinner2Selection", psl);
+//        outState.putStringArrayList("spinner2Options", new ArrayList<>(sloka));
+//    }
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        if (savedInstanceState != null) {
+//            // Restore the selected item and options for spinner1
+//            spinner1Selection = savedInstanceState.getInt("spinner1Selection", -1);
+//            adhyay = savedInstanceState.getStringArrayList("spinner1Options");
+//            ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, adhyay);
+//            textView1.setAdapter(adapter1);
+//            if (spinner1Selection >= 0) {
+//                textView1.setSelection(spinner1Selection);
+//            }
+//
+//            // Restore the selected item and options for spinner2
+//            spinner2Selection = savedInstanceState.getInt("spinner2Selection", -1);
+//            sloka = savedInstanceState.getStringArrayList("spinner2Options");
+//            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, sloka);
+//            textView2.setAdapter(adapter2);
+//            if (spinner2Selection >= 0) {
+//                textView2.setSelection(spinner2Selection);
+//            }
+//        }
+//    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

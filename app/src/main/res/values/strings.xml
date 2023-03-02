@@ -48,4 +48,6 @@
     <string name="email">Email</string>
     <string name="bio">Bio</string>
     <string name="edit">Edit</string>
+    <string name="todo">TODO</string>
+    <string name="brawse">brawse</string>
 </resources>

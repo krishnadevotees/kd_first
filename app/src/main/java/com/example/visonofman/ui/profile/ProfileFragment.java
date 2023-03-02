@@ -46,6 +46,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
@@ -79,7 +80,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        uri= Uri.parse("");
+//        uri= Uri.parse("");
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -119,7 +120,7 @@ public class ProfileFragment extends Fragment {
                     }
                     binding.profileBio.setText(bio);
                     binding.profileName.setText(name);
-                    binding.profilrEmail.setText(email);
+                    binding.profilrEmail.setText("" + email + "");
                     loadingDialog.dismiss();
                 }
             }
@@ -187,6 +188,7 @@ public class ProfileFragment extends Fragment {
                                         token.continuePermissionRequest();
                                     }
                                 }).check();
+
                     }
                 });
 
@@ -215,7 +217,6 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-
             }
         });
 
@@ -234,64 +235,113 @@ public class ProfileFragment extends Fragment {
 //        uemail = e.getText().toString();
 //        udesc = d.getText().toString();
 
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference reference = firebaseStorage.getReference("images/" + firebaseAuth.getCurrentUser().getEmail());
 
+//        if (uri != null) {
+//
+//
+//
+//        } else {
+//            SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage",0);
+//            String uriString = sharedPreferences.getString("imageUri", null);
+//            if (uriString!=null){
+//                uri = Uri.parse(uriString);
+//            }
+//
+//        }
+
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage", 0);
+        String uriString = sharedPreferences.getString("imageUri", null);
+
+        int resId = R.drawable.pnguser;
+        Uri uri4 = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + resId);
 
         if (uri != null) {
 
+            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+            StorageReference reference = firebaseStorage.getReference("images/" + firebaseAuth.getCurrentUser().getEmail());
+            reference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri3) {
+                            uri2 = uri3;
+                            uri=null;
+                            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                            DocumentReference documentReference = firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+
+
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("name", n.getText().toString());
+                            data.put("email", e.getText().toString());
+                            data.put("desc", d.getText().toString());
+                            data.put("image", uri3.toString());
+
+
+                            documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                    getActivity().recreate();
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getContext(), "Profile Update Fail", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
+                    });
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    float per = (100 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+//                        progressDialog.setMessage("Updating... " + (int) per + " %");
+                }
+            });
+
         } else {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage",0);
-            String uriString = sharedPreferences.getString("imageUri", null);
-            if (uriString!=null){
-                uri = Uri.parse(uriString);
-            }
+//            if (uriString != null) {
+//                uri = Uri.parse(uriString);
+//            } else {
+//                uri = uri4;
+//            }
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            DocumentReference documentReference = firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("name", n.getText().toString());
+            data.put("email", e.getText().toString());
+            data.put("desc", d.getText().toString());
+//            data.put("image", uri4.toString());
+
+
+            documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+
+                    getActivity().recreate();
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Profile Update Fail", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
 
-        reference.putFile(uri,null,uri2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri3) {
-                        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                        DocumentReference documentReference = firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-                        UpdateProfileModel model = new UpdateProfileModel(n.getText().toString(), e.getText().toString(), d.getText().toString(), uri3.toString());
-
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("name", model.getName());
-                        data.put("email", model.getEmail());
-                        data.put("desc", model.getDisc());
-                        data.put("image", model.getImage());
-
-                        documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-
-                                getActivity().recreate();
-                                progressDialog.dismiss();
-                                Toast.makeText(getContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getContext(), "Profile Update Fail", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                    }
-                });
-            }
-        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onPaused(@NonNull UploadTask.TaskSnapshot snapshot) {
-                float per = (100 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                progressDialog.setMessage("Updating... " + (int) per + " %");
-            }
-        });
 
     }
 
@@ -301,7 +351,8 @@ public class ProfileFragment extends Fragment {
         if (requestCode == 100 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             uri = data.getData();
 
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage",0);
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage", 0);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("imageUri", uri.toString());
             editor.apply();
@@ -322,6 +373,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        uri = uri2 = null;
         binding = null;
     }
 

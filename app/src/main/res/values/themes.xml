@@ -1,33 +1,61 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.VisonOfMan" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.VisonOfMan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/kesari</item>
+        <item name="colorPrimary">#FF8A65</item>
         <item name="colorPrimaryVariant">#FFB57C</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/kesari</item>
         <item name="colorSecondaryVariant">@color/kesari</item>
+        <item name="colorOnSecondary">@color/blue</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">#000000</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.VisonOfMan.material3" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#9A9A9A</item>
+        <item name="colorPrimaryVariant">#915A33</item>
+        <item name="colorOnPrimary">#DD1D1D</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#9E9E9E</item>
+        <item name="colorSecondaryVariant">@color/purple_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">#000000</item>
         <!-- Customize your theme here. -->
     </style>
 
+
     <style name="Theme.VisonOfMan.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.VisonOfMan.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.VisonOfMan.AppBarOverlay" parent="Theme.AppCompat.DayNight" />
+    <style name="Theme.VisonOfMan.material3.button" parent="ThemeOverlay.Material3.Button.TextButton" />
+    <style name="Theme.VisonOfMan.material3.button.Light" parent="ThemeOverlay.Material3.FloatingActionButton.Surface" />
 
-    <style name="Theme.VisonOfMan.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    
+    <style name="Theme.VisonOfMan.PopupOverlay" parent="ThemeOverlay.AppCompat.DayNight" />
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <!-- Customize your action bar style here -->
+
+        <item name="android:titleTextStyle">@style/MyActionBarTitleTextStyle</item>
+    </style>
+
+    <style name="MyActionBarTitleTextStyle" parent="@style/TextAppearance.Material3.ActionBar.Title">
+        <!-- Customize your action bar title text style here -->
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
     <style name="Dialoganimation">
         <item name="android:windowEnterAnimation" >@anim/bottam_dialog_slide_in</item>
         <item name="android:windowExitAnimation" >@anim/bottam_dialog_slide_out</item>
     </style>
-    <style name="WhiteButton" parent="Widget.AppCompat.Button">
+    <style name="WhiteButton" parent="Widget.Material3.CompoundButton.MaterialSwitch">
         <item name="android:background">#FFFFFF</item>
         <item name="android:textColor">#000000</item>
     </style>

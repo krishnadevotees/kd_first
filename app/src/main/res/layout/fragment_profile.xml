@@ -11,17 +11,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="50dp"
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_marginStart="15dp"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/todo"
             android:src="@drawable/pnguser"
             app:civ_border_color="#FF000000"
             app:civ_border_width="1dp"
@@ -33,25 +32,14 @@
             app:layout_constraintVertical_bias="0.5" />
 
 
-        <!--    <TextView-->
-        <!--        android:id="@+id/profile_name"-->
-        <!--        android:layout_width="0dp"-->
-        <!--        android:layout_height="32dp"-->
-        <!--        android:layout_margin="25dp"-->
-        <!--        android:layout_toEndOf="@+id/profile_image"-->
-        <!--        android:text=""-->
-        <!--        android:textColor="@android:color/black"-->
-        <!--        android:textSize="24sp"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/edit" />-->
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="15dp"
             android:hint="Username"
             app:boxCornerRadiusBottomEnd="8dp"
             app:boxCornerRadiusBottomStart="8dp"
@@ -59,6 +47,7 @@
             app:boxCornerRadiusTopStart="8dp"
             app:boxStrokeColor="@color/design_default_color_primary"
             app:boxStrokeWidth="2dp"
+            app:errorEnabled="false"
             app:hintEnabled="true"
             app:hintTextColor="@color/design_default_color_primary"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,8 +63,9 @@
                 android:focusable="false"
                 android:inputType="none"
                 android:longClickable="false"
+                app:errorEnabled="false"
                 android:maxLines="1"
-                android:textColor="@color/design_default_color_primary"
+                android:textColor="@color/black"
                 android:textColorHint="@color/design_default_color_primary"
                 android:textSize="20sp" />
 
@@ -94,6 +84,7 @@
             app:boxCornerRadiusTopStart="8dp"
             app:boxStrokeColor="@color/design_default_color_primary"
             app:boxStrokeWidth="2dp"
+            app:errorEnabled="false"
             app:hintEnabled="true"
             app:hintTextColor="@color/design_default_color_primary"
             app:layout_constraintEnd_toEndOf="parent"
@@ -110,8 +101,9 @@
                 android:focusable="false"
                 android:inputType="none"
                 android:longClickable="false"
+                app:errorEnabled="false"
                 android:maxLines="1"
-                android:textColor="@color/design_default_color_primary"
+                android:textColor="@color/black"
                 android:textColorHint="@color/design_default_color_primary"
                 android:textSize="20sp" />
 
@@ -128,6 +120,7 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
+            app:errorEnabled="false"
             app:boxStrokeColor="@color/design_default_color_primary"
             app:boxStrokeWidth="2dp"
             app:hintEnabled="true"
@@ -143,44 +136,13 @@
                 android:layout_height="wrap_content"
                 android:cursorVisible="false"
                 android:focusable="false"
+                app:errorEnabled="false"
                 android:inputType="none"
                 android:longClickable="false"
-                android:textColor="@color/design_default_color_primary"
+                android:textColor="@color/black"
                 android:textColorHint="@color/design_default_color_primary"
                 android:textSize="20sp" />
-
         </com.google.android.material.textfield.TextInputLayout>
-        <!--    <TextView-->
-        <!--        android:id="@+id/profilr_email"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="32dp"-->
-        <!--        android:layout_margin="10dp"-->
-        <!--        android:layout_marginTop="32dp"-->
-        <!--        android:layout_toEndOf="@+id/profile_image"-->
-        <!--        android:lines="2"-->
-        <!--        android:maxWidth="250dp"-->
-        <!--        android:text=""-->
-        <!--        android:textColor="@android:color/black"-->
-        <!--        android:textSize="15sp"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintHorizontal_bias="0.5"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/edit" />-->
-
-        <!--    <TextView-->
-        <!--        android:id="@+id/profile_bio"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_margin="28dp"-->
-        <!--        android:layout_weight="2"-->
-        <!--        android:minWidth="250dp"-->
-        <!--        android:text=""-->
-        <!--        android:textColor="@color/black"-->
-        <!--        android:textSize="20sp"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintHorizontal_bias="0.5"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintTop_toBottomOf="@+id/profilr_email" />-->
 
         <Button
             android:id="@+id/edit"
@@ -188,7 +150,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:backgroundTint="#3E50EA"
+            android:backgroundTint="@color/design_default_color_primary"
             android:text="@string/edit"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -208,8 +170,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.24897401" />
-
-
 
 
 

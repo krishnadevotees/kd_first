@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,6 +31,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -46,12 +46,14 @@ import com.example.visonofman.databinding.ActivityHome2Binding;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -61,9 +63,11 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     FirebaseFirestore firestore;
-
+    DocumentReference documentReference;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
+    int selectedRadioButtonId = 0 ;
+    String selectedLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = firestore.collection("users").document(firebaseUser.getUid());
+        documentReference = firestore.collection("users").document(firebaseUser.getUid());
 Log.d("firebase",firebaseUser.getUid());
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
@@ -87,6 +91,7 @@ Log.d("firebase",firebaseUser.getUid());
         FirebaseApp.initializeApp(this);
 
         setSupportActionBar(binding.appBarHome2.toolbar1);
+
 
         drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
@@ -205,14 +210,41 @@ Log.d("firebase",firebaseUser.getUid());
         Button cancle = dialog.findViewById(R.id.cancle);
 
 
+
+
+
+//        if (!isFirstrun){
+////             selectedRadioButtonId =R.id.hindi;
+//             isFirstrun =false;
+//        }else {
+//
+//            if (selectedRadioButtonId != -1) {
+//
+//
+//            }else {
+//                Toast.makeText(this, "error sharedprefrence ", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+
+
+//        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot.exists()){
+//                    selectedLanguage = documentSnapshot.get("selectedLanguage",String.class);
+//
+//                Toast.makeText(HomeActivity.this, "selectedLanguage "+selectedLanguage, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
         SharedPreferences prefs =  HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
-        int selectedRadioButtonId = prefs.getInt("selectedRadioButtonId", -1);
-        if (selectedRadioButtonId != -1) {
-            RadioButton selectedRadioButton = dialog.findViewById(selectedRadioButtonId);
-            selectedRadioButton.setChecked(true);
-        }else {
-            Toast.makeText(this, "error ", Toast.LENGTH_SHORT).show();
-        }
+        selectedRadioButtonId = prefs.getInt("selectedRadioButtonId",0);
+        radioGroup.check(selectedRadioButtonId);
+
+
+
+
+
 
 
         okbutton.setOnClickListener(new View.OnClickListener() {
@@ -266,7 +298,15 @@ Log.d("firebase",firebaseUser.getUid());
                 editor.apply();
                 Log.d("devin", "language code :::: " + language);
 
-               
+
+                Map<String,Object> data =new HashMap<>();
+                data.put("selectedLanguage",language);
+                documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("devin","selectedLanguage Updated !!!!!");
+                    }
+                });
 
                 SharedPreferences prefs =  HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
                 SharedPreferences.Editor editor1 = prefs.edit();

@@ -6,6 +6,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/ThemeOverlay.Material3.NavigationView"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -21,6 +22,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+
         app:headerLayout="@layout/nav_header_home2"
         app:menu="@menu/activity_home_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

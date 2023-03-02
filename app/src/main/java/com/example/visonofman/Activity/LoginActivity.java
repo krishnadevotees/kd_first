@@ -12,12 +12,17 @@ import android.widget.Toast;
 
 import com.example.visonofman.R;
 import com.example.visonofman.SigninFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     Dialog loadingDialog;
+    GoogleSignInOptions googleSignInOptions;
+    GoogleSignInClient googleSignInClient;
 
     private FirebaseAuth mAuth;
 
@@ -28,6 +33,12 @@ public class LoginActivity extends AppCompatActivity {
 
         loadingDialog = new Dialog(LoginActivity.this);
         loadingDialog.setContentView(R.layout.login_dialog);
+
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
 
 // ...
@@ -61,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+        googleSignInClient.signOut();
     }
 
     @Override

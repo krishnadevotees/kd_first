@@ -323,6 +323,7 @@ public class SignupFragment extends Fragment {
                                     user.put("password", pass);
                                     user.put("image", "");
                                     user.put("desc", "");
+                                    user.put("selectedLanguage", "hindi");
                                     user.put("date", dateTimeString);
 
                                     firestore.collection("users")
@@ -389,4 +390,5 @@ public class SignupFragment extends Fragment {
         }
         ft.commit();
     }
+
 }

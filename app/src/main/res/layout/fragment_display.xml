@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#9A9A9A"
+    android:theme="@style/Theme.Material3.Light"
     tools:context=".DisplayFragment">
 
     <LinearLayout

@@ -112,6 +112,9 @@ public class passFragment extends Fragment {
                                     user1.put("password", pass);
                                     user1.put("idToken", acct.getIdToken());
                                     user1.put("date", dateTimeString);
+                                    user1.put("image", "");
+                                    user1.put("desc", "");
+
 
                                     firestore.collection("users")
                                             .document(userId)

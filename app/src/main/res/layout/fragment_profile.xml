@@ -45,11 +45,9 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="@color/design_default_color_primary"
             app:boxStrokeWidth="2dp"
             app:errorEnabled="false"
             app:hintEnabled="true"
-            app:hintTextColor="@color/design_default_color_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,8 +63,6 @@
                 android:longClickable="false"
                 app:errorEnabled="false"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textColorHint="@color/design_default_color_primary"
                 android:textSize="20sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -82,11 +78,9 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="@color/design_default_color_primary"
             app:boxStrokeWidth="2dp"
             app:errorEnabled="false"
             app:hintEnabled="true"
-            app:hintTextColor="@color/design_default_color_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -103,8 +97,6 @@
                 android:longClickable="false"
                 app:errorEnabled="false"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textColorHint="@color/design_default_color_primary"
                 android:textSize="20sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -121,10 +113,8 @@
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
             app:errorEnabled="false"
-            app:boxStrokeColor="@color/design_default_color_primary"
             app:boxStrokeWidth="2dp"
             app:hintEnabled="true"
-            app:hintTextColor="@color/design_default_color_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,8 +129,6 @@
                 app:errorEnabled="false"
                 android:inputType="none"
                 android:longClickable="false"
-                android:textColor="@color/black"
-                android:textColorHint="@color/design_default_color_primary"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -150,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/design_default_color_primary"
+            android:backgroundTint="#4DB6AC"
             android:text="@string/edit"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"

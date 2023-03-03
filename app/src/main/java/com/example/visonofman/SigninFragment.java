@@ -149,21 +149,29 @@ public class SigninFragment extends Fragment {
                     firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = firebaseAuth.getCurrentUser();
-                                String name = user.getEmail();
-                                Toast.makeText(getContext(), "Log in as " + name, Toast.LENGTH_SHORT).show();
-                                loadingDialog.dismiss();
-                                Intent intent = new Intent(getContext(), HomeActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                            } else {
-                                // Login failed
-                                loadingDialog.dismiss();
-                                Exception exception = task.getException();
-                                Toast.makeText(getContext(), "exception at oncomplete signin frag" + exception, Toast.LENGTH_SHORT).show();
-                                Log.d("firebase", " signin exc ::::  " + exception);
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user.isEmailVerified()){
+                                if (task.isSuccessful()) {
+
+                                    String name = user.getEmail();
+                                    Toast.makeText(getContext(), "Login as " + name, Toast.LENGTH_SHORT).show();
+                                    loadingDialog.dismiss();
+                                    Intent intent = new Intent(getContext(), HomeActivity.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                } else {
+                                    // Login failed
+                                    loadingDialog.dismiss();
+                                    Exception exception = task.getException();
+                                    Toast.makeText(getContext(), "exception at oncomplete signin frag" + exception, Toast.LENGTH_SHORT).show();
+                                    Log.d("firebase", " signin exc ::::  " + exception);
+                                }
+                            }else {
+                                Toast.makeText(getContext(), "Please Verify your Email", Toast.LENGTH_SHORT).show();
+                                p.setText("");
+
                             }
+
                         }
                     });
                 } else {

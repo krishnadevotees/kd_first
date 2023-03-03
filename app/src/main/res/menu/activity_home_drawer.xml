@@ -19,7 +19,7 @@
             android:title="@string/menu_profile" />
         <item
             android:id="@+id/fav_Fragment"
-            android:icon="@drawable/baseline_favorite_24"
+            android:icon="@drawable/baseline_favorite__fill_24"
             android:title="Favrate " />
 
 

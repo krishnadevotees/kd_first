@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_favorite"
-        android:icon="@drawable/favorite_svg"
+        android:icon="@drawable/baseline_favorite_24"
         android:title="Favorite"
         android:visible="false"
         app:showAsAction="ifRoom" />

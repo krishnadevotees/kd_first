@@ -14,19 +14,17 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.VisonOfMan.material3" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">#9A9A9A</item>
-        <item name="colorPrimaryVariant">#915A33</item>
-        <item name="colorOnPrimary">#DD1D1D</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">#9E9E9E</item>
-        <item name="colorSecondaryVariant">@color/purple_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">#000000</item>
-        <!-- Customize your theme here. -->
+    <style name="ThemeOverlay.Material3" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
     </style>
+
+    <style name="Widget.Material3.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/material_on_background_emphasis_medium</item>
+        <item name="strokeColor">@color/material_on_background_emphasis_medium</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+
 
 
     <style name="Theme.VisonOfMan.NoActionBar">

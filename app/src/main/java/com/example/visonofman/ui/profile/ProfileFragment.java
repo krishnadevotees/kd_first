@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -15,6 +16,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.DynamicLayout;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +92,7 @@ public class ProfileFragment extends Fragment {
         binding.textInputLayout.setHintAnimationEnabled(true);
 
 
+
         loadingDialog = new Dialog(getContext());
         loadingDialog.setContentView(R.layout.login_dialog);
         loadingDialog.setCancelable(false);
@@ -137,6 +141,26 @@ public class ProfileFragment extends Fragment {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
                 dialog.setContentView(R.layout.update_profile);
+
+
+
+                // Inflate the BottomSheet layout
+                View bottomSheet = getLayoutInflater().inflate(R.layout.update_profile, null);
+
+
+                if (getResources().getConfiguration().uiMode == Configuration.UI_MODE_NIGHT_YES) {
+                    // Dark mode is enabled
+                    int color = getResources().getColor(R.color.bottom_sheet_color);
+                    // Set the color of your BottomSheet here
+                    bottomSheet.setBackgroundColor(color);
+                } else {
+                    // Dark mode is not enabled
+                    int color = getResources().getColor(R.color.white);
+                    // Set the color of your BottomSheet here
+                    bottomSheet.setBackgroundColor(color);
+                }
+
+
 
                 Button update = dialog.findViewById(R.id.ok);
                 Button cancle = dialog.findViewById(R.id.cancle);

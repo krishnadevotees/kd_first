@@ -323,7 +323,7 @@ public class SignupFragment extends Fragment {
                                     user.put("password", pass);
                                     user.put("image", "");
                                     user.put("desc", "");
-                                    user.put("selectedLanguage", "hindi");
+                                    user.put("selectedLanguage", "0");
                                     user.put("date", dateTimeString);
 
                                     firestore.collection("users")
@@ -334,10 +334,16 @@ public class SignupFragment extends Fragment {
                                                 public void onSuccess(Void unused) {
                                                     Log.d("firebase", "User added to Firestore");
 
-                                                    Intent intent = new Intent(getContext(), HomeActivity.class);
-                                                    startActivity(intent);
-                                                    loadingDialog.dismiss();
-                                                    getActivity().finish();
+                                                    firebaseAuth.getCurrentUser().sendEmailVerification();
+                                                    if (firebaseAuth.getCurrentUser().isEmailVerified()){
+                                                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                                                        startActivity(intent);
+                                                        loadingDialog.dismiss();
+                                                        getActivity().finish();
+                                                    }else {
+                                                        Toast.makeText(getContext(), "Email Verification link sent \nPlease Verify your Email", Toast.LENGTH_SHORT).show();
+                                                    }
+
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
@@ -391,4 +397,15 @@ public class SignupFragment extends Fragment {
         ft.commit();
     }
 
+    @Override
+    public void onDestroyView() {
+       loadingDialog.dismiss();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onPause() {
+        loadingDialog.dismiss();
+        super.onPause();
+    }
 }

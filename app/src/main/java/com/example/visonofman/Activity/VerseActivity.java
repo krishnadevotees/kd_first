@@ -2,9 +2,11 @@ package com.example.visonofman.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,11 +14,13 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.visonofman.DisplayFragment;
 import com.example.visonofman.R;
 import com.example.visonofman.VerseListFragment;
 
 public class VerseActivity extends AppCompatActivity {
     int id;
+    boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +66,11 @@ public class VerseActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.action_favorite:
-                //do with your action
-                Toast.makeText(this, "action_favorite clicked", Toast.LENGTH_SHORT).show();
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+                if (fragment != null && fragment.isVisible()) {
+                    return fragment.onOptionsItemSelected(item);
+                }
+//                Toast.makeText(this, "action_favorite clicked", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

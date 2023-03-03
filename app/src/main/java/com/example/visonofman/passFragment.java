@@ -114,6 +114,7 @@ public class passFragment extends Fragment {
                                     user1.put("date", dateTimeString);
                                     user1.put("image", "");
                                     user1.put("desc", "");
+                                    user1.put("selectedLanguage", "0");
 
 
                                     firestore.collection("users")

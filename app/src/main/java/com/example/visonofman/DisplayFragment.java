@@ -48,6 +48,7 @@ public class DisplayFragment extends Fragment {
     String Language;
     String key1,key2,key3;
     TextToSpeech textToSpeech;
+    boolean isFavorite = false;
     private boolean isPlaying = false;
 
     public DisplayFragment(int chapter,int verse,int size) {
@@ -207,7 +208,6 @@ public class DisplayFragment extends Fragment {
 
 
 
-
         return view;
     }
     public void showData(int index){
@@ -258,6 +258,28 @@ public class DisplayFragment extends Fragment {
         MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
         favoriteMenuItem.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                //do with your action
+                Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite_24, null);
+                Drawable myDrawable2 =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite__fill_24, null);
+                if (!isFavorite){
+                    item.setIcon(myDrawable2);
+                    isFavorite = true;
+                }else {
+                    item.setIcon(myDrawable);
+                    isFavorite = false;
+                }
+
+                Toast.makeText(getContext(), "action_favorite clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

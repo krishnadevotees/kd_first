@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:id="@+id/radioGroup"
+        android:theme="@style/Theme.Material3.Light"
         android:elevation="10dp"
         >
 

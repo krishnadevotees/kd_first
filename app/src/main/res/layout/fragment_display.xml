@@ -12,7 +12,6 @@
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,16 +39,14 @@
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:text="श्लोक"
                     android:textColor="@color/black"
                     android:textSize="25dp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
 
                 <TextView
                     android:id="@+id/verse"
@@ -114,15 +111,18 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
                     android:gravity="center"
                     android:minHeight="150dp"
                     android:scrollbars="vertical"
                     android:textColor="@color/black"
                     android:textSize="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView3"
+                    app:layout_constraintVertical_bias="1.0"
                     tools:ignore="TextSizeCheck" />
 
                 <androidx.constraintlayout.widget.Guideline
@@ -171,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.87" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/playbtn"

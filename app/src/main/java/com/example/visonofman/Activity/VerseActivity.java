@@ -43,6 +43,15 @@ public class VerseActivity extends AppCompatActivity {
         Log.d("devin","String id in verse activity"+id);
 
         showFragment(new VerseListFragment(VerseActivity.this,id),0);
+
+
+        DisplayFragment displayFragment =(DisplayFragment) getSupportFragmentManager().findFragmentById(R.id.displayFragment);
+        if (displayFragment != null && displayFragment.isVisible()) {
+
+        } else {
+
+        }
+
     }
     private void showFragment(Fragment fragment, int flag) {
 
@@ -74,6 +83,21 @@ public class VerseActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (fragment instanceof DisplayFragment) {
+            // Set the title and other properties of the ActionBar for the second fragment
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            // Reset the title and other properties of the ActionBar for other fragments
+            getSupportActionBar().setTitle("List Of Slokas");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         }
     }
 

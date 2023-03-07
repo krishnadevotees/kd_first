@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+   android:layout_marginTop="20dp"
     tools:context=".ui.favrate.fav_Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginBottom="20sp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:id="@+id/tv_fa"
+            android:textSize="20sp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/blue"
+            />
 
-</FrameLayout>
+    </ScrollView>
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/fav_rv"-->
+<!--        android:layout_margin="15dp"-->
+<!--        />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

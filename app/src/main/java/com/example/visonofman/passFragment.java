@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -99,11 +100,9 @@ public class passFragment extends Fragment {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
                                     Log.d("firebase", userId);
 
-                                    // Get the current date and time
+
                                     Date now = new Date();
-                                    // Define a format for displaying the date and time
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    // Format the date and time using the defined format
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
                                     String dateTimeString = sdf.format(now);
 
                                     Map<String, Object> user1 = new HashMap<>();
@@ -124,6 +123,23 @@ public class passFragment extends Fragment {
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     Log.d("firebase", "User added to Firestore");
+
+                                                    firestore.collection("users")
+                                                            .document(userId)
+                                                            .update("favorite", new HashMap<>())
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.d("devin", "Blank map field added to user details!");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("devin", "Error adding blank map field to user details", e);
+                                                                }
+                                                            });
+
                                                     Intent intent = new Intent(getContext(), HomeActivity.class);
                                                     Toast.makeText(getContext(), "Log in as " + name, Toast.LENGTH_SHORT).show();
                                                     startActivity(intent);
@@ -145,41 +161,6 @@ public class passFragment extends Fragment {
                                 }
                             }
                         });
-
-//                firebaseAuth.createUserWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//                    @Override
-//                    public void onSuccess(AuthResult authResult) {
-//                        String userId = firebaseAuth.getCurrentUser().getUid();
-//                        Log.d("firebase",userId);
-//
-//                        Map<String, Object> user = new HashMap<>();
-//                        user.put("name", name);
-//                        user.put("email", email);
-//                        user.put("password", pass);
-//
-//                        firestore.collection("users")
-//                                .document(userId)
-//                                .set(user)
-//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void unused) {
-//                                        Log.d("firebase", "User added to Firestore");
-//                                        Intent intent=new Intent(getContext(), HomeActivity.class);
-//                                        Toast.makeText(getContext(), "Log in as "+ name, Toast.LENGTH_SHORT).show();
-//                                        startActivity(intent);
-//                                        loadingDialog.dismiss();
-//                                        getActivity().finish();
-//                                    }
-//                                }).addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        loadingDialog.dismiss();
-//                                        Log.w("firebase", "Error adding user to Firestore", e);
-//                                    }
-//                                });
-//                    }
-//                });
-
             }
         });
 

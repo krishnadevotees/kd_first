@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.visonofman.R;
 import com.example.visonofman.SigninFragment;
+import com.example.visonofman.WaitFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -41,10 +42,16 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
 
-// ...
-// Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null && currentUser.isEmailVerified()){
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            finish();
+        }
+
         loadfregment(new SigninFragment(), 0);
+
 
 
 //        Toast.makeText(this, " "+mAuth.getCurrentUser(), Toast.LENGTH_SHORT).show();
@@ -79,10 +86,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
 
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            finish();
-        }
+
+
     }
 }

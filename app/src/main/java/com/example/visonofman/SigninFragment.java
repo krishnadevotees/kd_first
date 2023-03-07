@@ -283,7 +283,7 @@ public class SigninFragment extends Fragment {
             }
 
         } else {
-//           onDestroyView();
+            Log.d("devin","Request code is not 1");
         }
 
 
@@ -311,5 +311,10 @@ public class SigninFragment extends Fragment {
                 fp1.setVisibility(View.VISIBLE);
             }
         }.start();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

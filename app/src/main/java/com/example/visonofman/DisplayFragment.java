@@ -1,7 +1,7 @@
 package com.example.visonofman;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,18 +23,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.visonofman.CustomClasses.Sharedprefrence_Language;
 import com.example.visonofman.ModelClass.DisplayVerse;
+import com.example.visonofman.ModelClass.favModel;
+import com.example.visonofman.ModelClass.fav_integers;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
 
 public class DisplayFragment extends Fragment {
 
@@ -43,13 +54,19 @@ public class DisplayFragment extends Fragment {
     DatabaseReference databaseReference;
     ArrayList<DisplayVerse> data =new ArrayList<>();
     TextView Verse,Translate,Description;
-    ArrayList<String> list = new ArrayList<>();
+
     FloatingActionButton play,stop;
     String Language;
     String key1,key2,key3;
     TextToSpeech textToSpeech;
     boolean isFavorite = false;
     private boolean isPlaying = false;
+    Set<String> myList = new HashSet<>();
+    int Vid ;
+    FirebaseFirestore firestore;
+    FirebaseAuth auth;
+    FirebaseUser currentUser;
+    List<fav_integers> integers=new ArrayList<>();
 
     public DisplayFragment(int chapter,int verse,int size) {
         this.chapter=chapter;
@@ -80,10 +97,17 @@ public class DisplayFragment extends Fragment {
         play=view.findViewById(R.id.playbtn);
 
 
+
         firebaseDatabase= FirebaseDatabase.getInstance();
-        databaseReference =firebaseDatabase.getReference("data/languages/"+Language+"/chapters/"+chapter+"/data/");
+        databaseReference = firebaseDatabase.getReference("data/languages/"+Language+"/chapters/"+chapter+"/data/");
 
         showData(verse);
+
+         firestore= FirebaseFirestore.getInstance();
+         auth = FirebaseAuth.getInstance();
+         currentUser = auth.getCurrentUser();
+
+
 
 
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
@@ -111,7 +135,7 @@ public class DisplayFragment extends Fragment {
                     textToSpeech.setSpeechRate(0.7f);
                     textToSpeech.setLanguage(new Locale("hi"));
 
-                    HashMap<String, String> params = new HashMap<String, String>();
+                    HashMap<String, String> params = new HashMap<>();
                     params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SPEECH_ID");
 
                     textToSpeech.speak(key1,TextToSpeech.QUEUE_FLUSH,params);
@@ -147,36 +171,34 @@ public class DisplayFragment extends Fragment {
         FloatingActionButton nextfab= view.findViewById(R.id.right_fab);
 
         FloatingActionButton prevfab = view.findViewById(R.id.left_fab);
-        nextfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textToSpeech.stop();
-                Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.bx_play, null);
-                play.setImageDrawable(myDrawable);
-                isPlaying = false;
+        nextfab.setOnClickListener(view1 -> {
+            textToSpeech.stop();
+            Drawable myDrawable =  ResourcesCompat.getDrawable(getResources(), R.drawable.bx_play, null);
+            play.setImageDrawable(myDrawable);
+            isPlaying = false;
 
 
-                int next = verse + 1;
-                prevfab.setVisibility(View.VISIBLE);
-                if (verse < size -1 ){
+            int next = verse + 1;
+            prevfab.setVisibility(View.VISIBLE);
+            if (verse < size -1 ){
 
 
-                    verse = next;
-                    showData(next);
-
-                    Log.d("devin","size from adepter"+size);
-                    Log.d("devin","verse index from adepter"+verse);
-
-                }
-                else {
-                    nextfab.setVisibility(View.GONE);
-                    Toast.makeText(getContext(), "Go to next chapter ", Toast.LENGTH_SHORT).show();
-                }
+                verse = next;
+                showData(next);
+//                    getActivity().invalidateOptionsMenu();
 
                 Log.d("devin","size from adepter"+size);
                 Log.d("devin","verse index from adepter"+verse);
 
             }
+            else {
+                nextfab.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "Go to next chapter ", Toast.LENGTH_SHORT).show();
+            }
+
+            Log.d("devin","size from adepter"+size);
+            Log.d("devin","verse index from adepter"+verse);
+
         });
 
 
@@ -199,6 +221,7 @@ public class DisplayFragment extends Fragment {
                 }else {
                     verse = next;
                     showData(next);
+//                    getActivity().invalidateOptionsMenu();
                 }
 
             }
@@ -222,7 +245,7 @@ public class DisplayFragment extends Fragment {
 
                     // Set the title of the ActionBar
                     if (activity != null) {
-                        activity.getSupportActionBar().setTitle("श्लोक  "+(index+1));
+                        Objects.requireNonNull(activity.getSupportActionBar()).setTitle("श्लोक  "+(index+1));
                     }
 
                     Verse.setText("");
@@ -232,6 +255,7 @@ public class DisplayFragment extends Fragment {
                     key1 = snapshot.child("VERSE").getValue(String.class);
                     key2 = snapshot.child("TRANSLATE").getValue(String.class);
                     key3 = snapshot.child("DESCRIPTION").getValue(String.class);
+                    Vid= snapshot.child("ID").getValue(Integer.class);
 
                     Verse.setText(key1);
                     Translate.setText(key2);
@@ -252,6 +276,28 @@ public class DisplayFragment extends Fragment {
             }
         });
     }
+//    public List<favModel> getData(){
+//        List<favModel> data =new ArrayList<>();
+//        data.add(new favModel(Vid,key1,key2,key3));
+//        return data;
+//    }
+    public void addToList(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("favorite", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        myList.add(""+Vid);
+        myList.add(key1);
+        myList.add(key2);
+        myList.add(key3);
+
+        favModel item=new favModel(Vid,key1,key2,key3);
+
+        Set<String> favorites = sharedPreferences.getStringSet("favorites", new HashSet<>());
+
+        favorites.add(item.getId() + "," + item.getVerse()+ "," +item.getTranslate() + "," + item.getDescription());
+        sharedPreferences.edit().putStringSet("favorites", favorites).apply();
+
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.custom_menu, menu);
@@ -259,6 +305,7 @@ public class DisplayFragment extends Fragment {
         favoriteMenuItem.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -269,17 +316,53 @@ public class DisplayFragment extends Fragment {
                 Drawable myDrawable2 =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite__fill_24, null);
                 if (!isFavorite){
                     item.setIcon(myDrawable2);
+                    addToList();
+                    getData();//*****************
+
+                    Toast.makeText(getContext(), ""+Vid+" Added to favorite ", Toast.LENGTH_SHORT).show();
+
                     isFavorite = true;
                 }else {
                     item.setIcon(myDrawable);
+                    Toast.makeText(getContext(), ""+Vid+" removed from favorite ", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("favorite", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    Set<String> myList = sharedPreferences.getStringSet("favoriteList", null);
+
                     isFavorite = false;
                 }
 
-                Toast.makeText(getContext(), "action_favorite clicked", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void getData(){
+        int l= Integer.parseInt(Language);
+
+
+        integers.add(new fav_integers(l,chapter,verse));
+        for (fav_integers favorite : integers) {
+            Log.d("devin", "Language: " + favorite.getLanguage() + ", Chapter: " + favorite.getChapter() + ", Verse: " + favorite.getVerse());
+        }
+
+
+        firestore.collection("users").document(auth.getCurrentUser().getUid()).update("favorite", integers)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("devin", "Favorite map updated for current user!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("devin", "Error updating favorite map for current user", e);
+                    }
+                });
+
     }
 
     @Override

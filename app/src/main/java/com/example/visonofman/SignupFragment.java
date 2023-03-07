@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -310,12 +311,11 @@ public class SignupFragment extends Fragment {
                                             });
 
 
-                                    // Get the current date and time
+
                                     Date now = new Date();
-                                    // Define a format for displaying the date and time
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    // Format the date and time using the defined format
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
                                     String dateTimeString = sdf.format(now);
+
 
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("name", name);
@@ -326,6 +326,7 @@ public class SignupFragment extends Fragment {
                                     user.put("selectedLanguage", "0");
                                     user.put("date", dateTimeString);
 
+
                                     firestore.collection("users")
                                             .document(userId)
                                             .set(user)
@@ -334,15 +335,23 @@ public class SignupFragment extends Fragment {
                                                 public void onSuccess(Void unused) {
                                                     Log.d("firebase", "User added to Firestore");
 
+                                                    firestore.collection("users")
+                                                            .document(userId)
+                                                            .update("favorite", new HashMap<>())
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.d("devin", "Blank map field added to user details!");
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("devin", "Error adding blank map field to user details", e);
+                                                                }
+                                                            });
                                                     firebaseAuth.getCurrentUser().sendEmailVerification();
-                                                    if (firebaseAuth.getCurrentUser().isEmailVerified()){
-                                                        Intent intent = new Intent(getContext(), HomeActivity.class);
-                                                        startActivity(intent);
-                                                        loadingDialog.dismiss();
-                                                        getActivity().finish();
-                                                    }else {
-                                                        Toast.makeText(getContext(), "Email Verification link sent \nPlease Verify your Email", Toast.LENGTH_SHORT).show();
-                                                    }
+                                                    loadfregment(new WaitFragment(),3);
 
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -400,6 +409,9 @@ public class SignupFragment extends Fragment {
     @Override
     public void onDestroyView() {
        loadingDialog.dismiss();
+       if (googleSignInClient != null){
+           googleSignInClient.signOut();
+       }
         super.onDestroyView();
     }
 
@@ -407,5 +419,19 @@ public class SignupFragment extends Fragment {
     public void onPause() {
         loadingDialog.dismiss();
         super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        if (firebaseAuth.getCurrentUser() != null && firebaseAuth.getCurrentUser().isEmailVerified()){
+            Intent intent = new Intent(getContext(), HomeActivity.class);
+            startActivity(intent);
+            loadingDialog.dismiss();
+            getActivity().finish();
+        }
+
     }
 }

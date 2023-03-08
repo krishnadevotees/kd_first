@@ -1,43 +1,38 @@
 package com.example.visonofman.ui.home;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.visonofman.Display2Fragment;
 import com.example.visonofman.R;
 import com.example.visonofman.databinding.FragmentHomeBinding;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     Context context;
     FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore db;
     DatabaseReference databaseReference;
     String Language;
     ArrayList<String> adhyay =new ArrayList<>();
@@ -56,137 +51,46 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-//        textView1=binding.autoCompleteTxtCh;
-//        textView2=binding.autoCompleteTxtSloka;
+        db = FirebaseFirestore.getInstance();
 
 
-        SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
-        Language= sharedPreferences.getString("lan","0");
-        Log.d("dev","selectedLanguage :::  "+Language);
-//        Toast.makeText(getContext(), "language "+Language, Toast.LENGTH_SHORT).show();
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference=firebaseDatabase.getReference("data/languages/");
-        databaseReference.child(Language+"/chapters/").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i=1;
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    adhyay.add("Adhyay "+i);
-                    i++;
-                    Log.d("devin", String.valueOf(snapshot.getChildren()));
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "database refrence error oncancle", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, adhyay);
-//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-//            textView1.setAdapter(adapter);
-
-
+//        Map<String, Object> chapter1 = new HashMap<>();
+//        chapter1.put("Chapter 1","1. প্রথম অধ্যায় - 'অর্জুন বিষাদ যোগ'।");
+//        chapter1.put("Chapter 2","2. দ্বিতীয় অধ্যায় - 'সাংখ্য যোগ'।");
+//        chapter1.put("Chapter 3","3. তৃতীয় অধ্যায় - 'কর্মযোগ'।");
+//        chapter1.put("Chapter 4","4. চতুর্থ অধ্যায় - 'জ্ঞান কর্ম সন্ন্যাস যোগ'।");
+//        chapter1.put("Chapter 5","5. পঞ্চম অধ্যায় - 'কর্ম সন্ন্যাস যোগ'।");
+//        chapter1.put("Chapter 6","6. ষষ্ঠ অধ্যায় - 'আত্মসংযম যোগ'।");
+//        chapter1.put("Chapter 7","7. সপ্তম অধ্যায় - 'জ্ঞান জ্ঞান যোগ'।");
+//        chapter1.put("Chapter 8","8. অষ্টম অধ্যায় - 'অক্ষর ব্রহ্ম যোগ'।");
+//        chapter1.put("Chapter 9","9. নবম অধ্যায় - 'রাজা বিদ্যা রাজা গুহ্য যোগ'।");
+//        chapter1.put("Chapter 10","10. দশম অধ্যায় - 'বিভূতি যোগ'।");
+//        chapter1.put("Chapter 11","11. একাদশ অধ্যায় - 'বিশ্বরূপ দর্শন যোগ'।");
+//        chapter1.put("Chapter 12","12. দ্বাদশ অধ্যায় - 'ভক্তি যোগ'।");
+//        chapter1.put("Chapter 13","13. ত্রয়োদশ অধ্যায় - 'ক্ষেত্র ক্ষেত্রজ্ঞান বিভাগ যোগ'।");
+//        chapter1.put("Chapter 14","14. চতুর্দশ অধ্যায় - 'গুনাত্রয় বিভাগ যোগ'।");
+//        chapter1.put("Chapter 15","15. পঞ্চদশ অধ্যায় - 'পুরুষোত্তম যোগ'।");
+//        chapter1.put("Chapter 16","16. ষোড়শ অধ্যায় - 'দৈবাসুরসম্পদ বিভাগ যোগ'।");
+//        chapter1.put("Chapter 17","17. সপ্তদশ অধ্যায় - 'শ্রদ্ধাত্রয় বিভাগ যোগ'।");
+//        chapter1.put("Chapter 18","18. অষ্টাদশ অধ্যায় - 'মোক্ষ সন্ন্যাস যোগ'।");
+//        chapter1.put("verse","ਸ਼ਲੋਕ ");
+//        chapter1.put("translate","ਅਨੁਵਾਦ ");
+//        chapter1.put("description","ਅਰਥ ");
+//        DocumentReference chapter1Ref = db.collection("display").document("Punjabi");
 //
-//        binding.autoCompleteTxtSloka.setEnabled(false);
-//        binding.autoCompleteTxtCh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//        chapter1Ref.set(chapter1).addOnSuccessListener(new OnSuccessListener<Void>() {
 //            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String item = parent.getItemAtPosition(position).toString();
-//                pch=position;
-////                Toast.makeText(getContext(),"Item: "+item+" position "+position,Toast.LENGTH_SHORT).show();
-//                if (item != null){
-//                    binding.autoCompleteTxtSloka.setEnabled(true);
-
-
-//
-//                    databaseReference.child(Language+"/chapters/"+position+ "/data/").addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            int i=1;
-//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                                sloka.add("Sloka "+i);
-//                                i++;
-//                                Log.d("devin", String.valueOf(snapshot.getChildren()));
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//
-//                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, sloka);
-//                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-//                        textView2.setAdapter(adapter);
-//
-//
-//                     sloka.clear();//clear if it is not used
-//
-//                    binding.autoCompleteTxtSloka.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                        @Override
-//                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                            String item2 = adapterView.getItemAtPosition(i).toString();
-//                            psl=i;
-//                            if (item2 != null){
-//                                //replace frag with item 2 params
-//                                showFragment(new Display2Fragment(i),3);
-//
-//                            }
-//                        }
-//                    });
-//
-//
-//
-//
-//
-//                }
+//            public void onSuccess(Void unused) {
+//                Log.d("devin", "DATA write completed");
 //            }
 //        });
 
 
-
         return root;
     }
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        // Save the selected item and options for spinner1
-//        outState.putInt("spinner1Selection", pch);
-//        outState.putStringArrayList("spinner1Options", new ArrayList<>(adhyay));
-//
-//        // Save the selected item and options for spinner2
-//        outState.putInt("spinner2Selection", psl);
-//        outState.putStringArrayList("spinner2Options", new ArrayList<>(sloka));
-//    }
-//    @Override
-//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            // Restore the selected item and options for spinner1
-//            spinner1Selection = savedInstanceState.getInt("spinner1Selection", -1);
-//            adhyay = savedInstanceState.getStringArrayList("spinner1Options");
-//            ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, adhyay);
-//            textView1.setAdapter(adapter1);
-//            if (spinner1Selection >= 0) {
-//                textView1.setSelection(spinner1Selection);
-//            }
-//
-//            // Restore the selected item and options for spinner2
-//            spinner2Selection = savedInstanceState.getInt("spinner2Selection", -1);
-//            sloka = savedInstanceState.getStringArrayList("spinner2Options");
-//            ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, sloka);
-//            textView2.setAdapter(adapter2);
-//            if (spinner2Selection >= 0) {
-//                textView2.setSelection(spinner2Selection);
-//            }
-//        }
-//    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

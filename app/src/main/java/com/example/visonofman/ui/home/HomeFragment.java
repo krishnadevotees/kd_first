@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.visonofman.R;
 import com.example.visonofman.databinding.FragmentHomeBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,31 +54,51 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+//        ArrayList<String> chapters = new ArrayList<>();
+//
+//        chapters.add("1. మొదటి అధ్యాయం - 'అర్జున విషాద యోగం'.");
+//        chapters.add("2. రెండవ అధ్యాయం - 'సాంఖ్య యోగా'.");
+//        chapters.add("3. మూడవ అధ్యాయం - 'కర్మ యోగం'.");
+//        chapters.add("4. నాల్గవ అధ్యాయం - 'జ్ఞాన కర్మ సన్యాస యోగం'.");
+//        chapters.add("5. ఐదవ అధ్యాయం - 'కర్మ సన్యాస యోగం'.");
+//        chapters.add("6. ఆరవ అధ్యాయం - 'ఆత్మసంయం యోగం'.");
+//        chapters.add("7. ఏడవ అధ్యాయం - 'జ్ఞాన విజ్ఞాన యోగం'.");
+//        chapters.add("8. ఎనిమిదవ అధ్యాయం - 'అక్షర బ్రహ్మ యోగం'.");
+//        chapters.add("9. తొమ్మిదవ అధ్యాయం - 'రాజ విద్యా రాజ గుహ్య యోగం'.");
+//        chapters.add("10. పదవ అధ్యాయం - 'విభూతి యోగం'.");
+//        chapters.add("11. పదకొండవ అధ్యాయం - 'విశ్వరూప దర్శన యోగం'.");
+//        chapters.add("12. పన్నెండవ అధ్యాయం - 'భక్తి యోగం'.");
+//        chapters.add("13. పదమూడవ అధ్యాయం - 'క్షేత్ర క్షేత్రజ్ఞ విభాగ యోగం'.");
+//        chapters.add("14. పద్నాలుగో అధ్యాయం - 'గుణత్రయ విభాగ యోగం'.");
+//        chapters.add("15. పదిహేనవ అధ్యాయం - 'పురుషోత్తమ యోగం'.");
+//        chapters.add("16. పదహారవ అధ్యాయం - 'దైవాసుర సంపద్ విభాగ యోగ'.");
+//        chapters.add("17. పదిహేడవ అధ్యాయం - 'శ్రద్ధత్రయ విభాగ యోగం'.");
+//        chapters.add("18. పద్దెనిమిదవ అధ్యాయం - 'మోక్ష సన్యాస యోగం'.");
+//
+//
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("chapters", chapters);
+//
+//        db.collection("Chapter")
+//                .document("Telugu")
+//                .set(data)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // Data has been successfully written
+//                        Log.d("devin", "DATA write completed");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d("devin", "DATA write failed");
+//                        // Handle any errors
+//                    }
+//                });
 
 
-
-//        Map<String, Object> chapter1 = new HashMap<>();
-//        chapter1.put("Chapter 1","1. প্রথম অধ্যায় - 'অর্জুন বিষাদ যোগ'।");
-//        chapter1.put("Chapter 2","2. দ্বিতীয় অধ্যায় - 'সাংখ্য যোগ'।");
-//        chapter1.put("Chapter 3","3. তৃতীয় অধ্যায় - 'কর্মযোগ'।");
-//        chapter1.put("Chapter 4","4. চতুর্থ অধ্যায় - 'জ্ঞান কর্ম সন্ন্যাস যোগ'।");
-//        chapter1.put("Chapter 5","5. পঞ্চম অধ্যায় - 'কর্ম সন্ন্যাস যোগ'।");
-//        chapter1.put("Chapter 6","6. ষষ্ঠ অধ্যায় - 'আত্মসংযম যোগ'।");
-//        chapter1.put("Chapter 7","7. সপ্তম অধ্যায় - 'জ্ঞান জ্ঞান যোগ'।");
-//        chapter1.put("Chapter 8","8. অষ্টম অধ্যায় - 'অক্ষর ব্রহ্ম যোগ'।");
-//        chapter1.put("Chapter 9","9. নবম অধ্যায় - 'রাজা বিদ্যা রাজা গুহ্য যোগ'।");
-//        chapter1.put("Chapter 10","10. দশম অধ্যায় - 'বিভূতি যোগ'।");
-//        chapter1.put("Chapter 11","11. একাদশ অধ্যায় - 'বিশ্বরূপ দর্শন যোগ'।");
-//        chapter1.put("Chapter 12","12. দ্বাদশ অধ্যায় - 'ভক্তি যোগ'।");
-//        chapter1.put("Chapter 13","13. ত্রয়োদশ অধ্যায় - 'ক্ষেত্র ক্ষেত্রজ্ঞান বিভাগ যোগ'।");
-//        chapter1.put("Chapter 14","14. চতুর্দশ অধ্যায় - 'গুনাত্রয় বিভাগ যোগ'।");
-//        chapter1.put("Chapter 15","15. পঞ্চদশ অধ্যায় - 'পুরুষোত্তম যোগ'।");
-//        chapter1.put("Chapter 16","16. ষোড়শ অধ্যায় - 'দৈবাসুরসম্পদ বিভাগ যোগ'।");
-//        chapter1.put("Chapter 17","17. সপ্তদশ অধ্যায় - 'শ্রদ্ধাত্রয় বিভাগ যোগ'।");
-//        chapter1.put("Chapter 18","18. অষ্টাদশ অধ্যায় - 'মোক্ষ সন্ন্যাস যোগ'।");
-//        chapter1.put("verse","ਸ਼ਲੋਕ ");
-//        chapter1.put("translate","ਅਨੁਵਾਦ ");
-//        chapter1.put("description","ਅਰਥ ");
 //        DocumentReference chapter1Ref = db.collection("display").document("Punjabi");
 //
 //        chapter1Ref.set(chapter1).addOnSuccessListener(new OnSuccessListener<Void>() {

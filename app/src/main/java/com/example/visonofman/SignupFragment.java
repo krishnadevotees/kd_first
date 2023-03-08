@@ -323,7 +323,7 @@ public class SignupFragment extends Fragment {
                                     user.put("password", pass);
                                     user.put("image", "");
                                     user.put("desc", "");
-                                    user.put("selectedLanguage", "0");
+                                    user.put("selectedLanguage", "Hindi");
                                     user.put("date", dateTimeString);
 
 

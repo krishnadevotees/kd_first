@@ -25,6 +25,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:id="@+id/tv"
+            android:minLines="2"
             android:textColor="@color/black"
             android:textStyle="bold" />
 <!--        <LinearLayout-->

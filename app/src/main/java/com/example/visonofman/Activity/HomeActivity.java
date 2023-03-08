@@ -67,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     int selectedRadioButtonId = 0 ;
-    String selectedLanguage;
+    String selectedLanguage ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
         documentReference = firestore.collection("users").document(firebaseUser.getUid());
-Log.d("firebase",firebaseUser.getUid());
+Log.d("firebase Current user UID =>",firebaseUser.getUid());
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
@@ -296,11 +296,46 @@ Log.d("firebase",firebaseUser.getUid());
 
                 editor.putString("lan", language);
                 editor.apply();
-                Log.d("devin", "language code :::: " + language);
+                Log.d("devin", "language selected no :::: " + language);
+
+                switch (language){
+                    case "0":
+                        selectedLanguage="Hindi";
+                        break;
+                    case "1":
+                        selectedLanguage="Gujarati";
+                        break;
+                    case "2":
+                        selectedLanguage="English";
+                        break;
+                    case "3":
+                        selectedLanguage="Marathi";
+                        break;
+                    case "4":
+                        selectedLanguage="Punjabi";
+                        break;
+                    case "5":
+                        selectedLanguage="Tamil";
+                        break;
+                    case "6":
+                        selectedLanguage="Telugu";
+                        break;
+                    case "7":
+                        selectedLanguage="Kannada";
+                        break;
+                    case "8":
+                        selectedLanguage="Malayalam";
+                        break;
+                    case "9":
+                        selectedLanguage="Bangla";
+                        break;
+                    default:
+                        selectedLanguage ="Hindi";
+                }
 
 
                 Map<String,Object> data =new HashMap<>();
-                data.put("selectedLanguage",language);
+                data.put("selectedLanguage",selectedLanguage);
                 documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -313,10 +348,11 @@ Log.d("firebase",firebaseUser.getUid());
                 editor1.putInt("selectedRadioButtonId", radioGroup.getCheckedRadioButtonId());
                 editor1.apply();
 
+                recreate();
                 dialog.dismiss();
 
-                recreate();
-                Toast.makeText(HomeActivity.this, "Language Changed ", Toast.LENGTH_SHORT).show();
+
+//                Toast.makeText(HomeActivity.this, "Language Changed ", Toast.LENGTH_SHORT).show();
 
             }
         });

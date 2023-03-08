@@ -1,5 +1,6 @@
 package com.example.visonofman;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,11 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.visonofman.Adepters.VerseListAdepter;
 import com.example.visonofman.ModelClass.VerseList;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -35,10 +40,13 @@ public class VerseListFragment extends Fragment {
     int flag;
     String Language;
     FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore firestore;
+    FirebaseAuth auth;
     DatabaseReference databaseReference;
     ArrayList<VerseList> data = new ArrayList<>();
     ArrayList<String> list = new ArrayList<>();
     VerseListAdepter adepter;
+    String lang;
 
     public VerseListFragment() {
         // Required empty public constructor
@@ -64,16 +72,24 @@ public class VerseListFragment extends Fragment {
 
 //        Language =selectedLanguage;
 //        sharedprefrence_language.clear();
-        SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
-        Language= sharedPreferences.getString("lan","0");
-        Log.d("dev","selectedLanguage :::  "+Language);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("language", 0);
+        Language = sharedPreferences.getString("lan", "0");
+        Log.d("dev", "selectedLanguage :::  " + Language);
 
 
         recyclerView = root.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.hasFixedSize();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("data/languages/"+Language+"/chapters/" + flag + "/data/");
+        databaseReference = firebaseDatabase.getReference("data/languages/" + Language + "/chapters/" + flag + "/data/");
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+
+        ProgressDialog progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -86,15 +102,31 @@ public class VerseListFragment extends Fragment {
 
                 }
 
-                for (int i = 0; i < list.size(); i++) {
-                    int a = i + 1;
-                    data.add(new VerseList("श्लोक " + a));
+                firestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        lang = documentSnapshot.getString("selectedLanguage");
+                        Log.d("devin", "onSuccess: selectedLanguage in display fragment   " + lang);
 
-                }
-                Log.d("devin", "" + data.size());
-                adepter = new VerseListAdepter(getContext(), data, getFragmentManager(), flag);
-                recyclerView.setAdapter(adepter);
+                        firestore.collection("display").document(documentSnapshot.getString("selectedLanguage") + "").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+                                String sloka = documentSnapshot.getString("verse");
+
+                                for (int i = 0; i < list.size(); i++) {
+                                    int a = i + 1;
+                                    data.add(new VerseList(sloka + " " + a));
+                                }
+
+                                Log.d("devin", "" + data.size());
+                                adepter = new VerseListAdepter(getContext(), data, getFragmentManager(), flag);
+                                recyclerView.setAdapter(adepter);
+                                progressDialog.dismiss();
+                            }
+                        });
+                    }
+                });
 
 
                 Log.d("devin", "List Size :::  " + list.size());
@@ -105,12 +137,6 @@ public class VerseListFragment extends Fragment {
                 Log.d("devin", "" + error);
             }
         });
-
-
-
-
-
-
 
 
         return root;

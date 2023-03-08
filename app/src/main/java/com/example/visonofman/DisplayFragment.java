@@ -2,6 +2,7 @@ package com.example.visonofman;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.visonofman.Adepters.CardView_Adepter;
 import com.example.visonofman.ModelClass.DisplayVerse;
 import com.example.visonofman.ModelClass.favModel;
 import com.example.visonofman.ModelClass.fav_integers;
@@ -36,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -53,7 +56,7 @@ public class DisplayFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<DisplayVerse> data =new ArrayList<>();
-    TextView Verse,Translate,Description;
+    TextView Verse,Translate,Description,tv1,tv2,tv3;
 
     FloatingActionButton play,stop;
     String Language;
@@ -65,6 +68,7 @@ public class DisplayFragment extends Fragment {
     int Vid ;
     FirebaseFirestore firestore;
     FirebaseAuth auth;
+    String lang;
     FirebaseUser currentUser;
     List<fav_integers> integers=new ArrayList<>();
 
@@ -95,19 +99,52 @@ public class DisplayFragment extends Fragment {
         Translate=view.findViewById(R.id.translate);
         Description=view.findViewById(R.id.desc);
         play=view.findViewById(R.id.playbtn);
-
+        tv1=view.findViewById(R.id.textView);
+        tv2=view.findViewById(R.id.textView2);
+        tv3=view.findViewById(R.id.textView3);
 
 
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("data/languages/"+Language+"/chapters/"+chapter+"/data/");
 
-        showData(verse);
-
          firestore= FirebaseFirestore.getInstance();
          auth = FirebaseAuth.getInstance();
          currentUser = auth.getCurrentUser();
 
+        ProgressDialog progressDialog=new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
+        firestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                lang = documentSnapshot.getString("selectedLanguage");
+                Log.d("devin", "onSuccess: selectedLanguage in display fragment   " + lang);
+
+                firestore.collection("display").document(documentSnapshot.getString("selectedLanguage")+"").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String sloka = documentSnapshot.getString("verse");
+                        String tran = documentSnapshot.getString("translate");
+                        String desc = documentSnapshot.getString("discription");
+
+                        tv1.setText(sloka);
+                        tv2.setText(tran);
+                        if (key3 == ""){
+                            tv3.setText("");
+                        }else {
+                            tv3.setText(desc);
+                        }
+
+
+                    }
+                });
+            }
+        });
+
+         showData(verse);
+         progressDialog.dismiss();
 
 
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {

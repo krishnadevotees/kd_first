@@ -10,6 +10,7 @@
     android:layout_columnWeight="1"
     android:layout_margin="20dp"
     app:cardCornerRadius="8dp"
+
     app:cardElevation="8dp"
     android:layout_gravity="center_vertical|center_horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">

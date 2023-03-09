@@ -15,7 +15,7 @@
             android:id="@+id/toolbarcustom"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#BABABA"
+            android:background="@color/safrron"
             app:layout_anchorGravity="center"
             app:popupTheme="@style/Theme.Material3.DayNight.NoActionBar" />
 

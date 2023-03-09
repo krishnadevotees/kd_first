@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/title_chooselanguage"
         android:textSize="20dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:gravity="center"
         android:elegantTextHeight="true"
@@ -105,7 +105,7 @@
         android:layout_margin="20dp"
         android:elegantTextHeight="true"
         android:elevation="20dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:text="@string/cancle"
         />
 

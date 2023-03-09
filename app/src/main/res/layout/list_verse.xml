@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/card"
-   app:cardCornerRadius="35dp"
+   app:cardCornerRadius="15dp"
     android:layout_margin="5dp"
     >
 
@@ -14,7 +14,7 @@
         android:layout_height="55dp"
         android:gravity="center"
         android:textColor="#000000"
-        android:background="#DFDFDF"
+        android:background="#f3b434"
 
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"

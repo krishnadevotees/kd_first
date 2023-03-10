@@ -136,26 +136,32 @@ public class DisplayFragment extends Fragment {
         firestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
+                if (documentSnapshot.exists() && documentSnapshot.get("favorite") != null) {
+
                     // retrieve the favorite list from the document
-                    List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
+                    if(documentSnapshot.get("favorite") == null){
+                        // no fav
+                    }else {
 
-                    for (HashMap<String, Object> hashMap : favoritesMap) {
-                        Long l = (Long) hashMap.get("language");
-                        Long chapter = (Long) hashMap.get("chapter");
-                        Long verse = (Long) hashMap.get("verse");
+                        List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
 
-                        fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
-                        favorites.add(favorite);
-                    }
-                    integers.clear();
-                    integers = favorites;
+                        for (HashMap<String, Object> hashMap : favoritesMap) {
+                            Long l = (Long) hashMap.get("language");
+                            Long chapter = (Long) hashMap.get("chapter");
+                            Long verse = (Long) hashMap.get("verse");
 
-                    for (fav_integers fav : favorites) {
-                        Log.d("devin",  "data from map in display frag  favo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   "+fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
-                    }
-                    for (fav_integers fav : integers) {
-                        Log.d("devin",  "data from map in display frag  inte!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   "+fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
+                            fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
+                            favorites.add(favorite);
+                        }
+                        integers.clear();
+                        integers = favorites;
+
+                        for (fav_integers fav : favorites) {
+                            Log.d("devin", "data from map in display frag  favo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+                        }
+                        for (fav_integers fav : integers) {
+                            Log.d("devin", "data from map in display frag  inte!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+                        }
                     }
                 } else {
                     Log.d("devin", "No such document");

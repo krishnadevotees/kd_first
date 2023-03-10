@@ -3,6 +3,7 @@ package com.example.visonofman.ui.favrate;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.visonofman.Activity.FavoriteActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +49,7 @@ RecyclerView recyclerView;
 FirebaseFirestore firestore;
 FirebaseAuth auth;
     List<fav_integers> favorites = new ArrayList<>();
+    Dialog dialog;
 
 
     public fav_Fragment() {}
@@ -79,38 +82,45 @@ FirebaseAuth auth;
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
+                        if (documentSnapshot.exists()  && documentSnapshot.get("favorite") != null) {
                             // retrieve the favorite list from the document
-                            List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
+                            
+                                recyclerView.setVisibility(View.VISIBLE);
+                                TextView textView1=view.findViewById(R.id.textv);
+//                                textView1.setVisibility(View.GONE);
+                                List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
 
-                            for (HashMap<String, Object> hashMap : favoritesMap) {
-                                Long l = (Long) hashMap.get("language");
-                                Long chapter = (Long) hashMap.get("chapter");
-                                Long verse = (Long) hashMap.get("verse");
+                                for (HashMap<String, Object> hashMap : favoritesMap) {
+                                    Long l = (Long) hashMap.get("language");
+                                    Long chapter = (Long) hashMap.get("chapter");
+                                    Long verse = (Long) hashMap.get("verse");
 
-                                fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
-                                favorites.add(favorite);
-                            }
-                            favAdepter favAdepter1=new favAdepter(favorites, getContext(), new favAdepter.ItemClickLisener() {
-                                @Override
-                                public void onItemClick(fav_integers fav_integers) {
-
-                                    Intent intent = new Intent(getContext(), FavoriteActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putInt("l",fav_integers.getLanguage());
-                                    bundle.putInt("v",fav_integers.getVerse());
-                                    bundle.putInt("c",fav_integers.getChapter());
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                                    fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
+                                    favorites.add(favorite);
                                 }
-                            });
-                            recyclerView.setAdapter(favAdepter1);
-                            for (fav_integers fav : favorites) {
+                                favAdepter favAdepter1 = new favAdepter(favorites, getContext(), new favAdepter.ItemClickLisener() {
+                                    @Override
+                                    public void onItemClick(fav_integers fav_integers) {
+
+                                        Intent intent = new Intent(getContext(), FavoriteActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putInt("l", fav_integers.getLanguage());
+                                        bundle.putInt("v", fav_integers.getVerse());
+                                        bundle.putInt("c", fav_integers.getChapter());
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                    }
+                                });
+                                recyclerView.setAdapter(favAdepter1);
+                                textView1.setVisibility(View.GONE);
+                                for (fav_integers fav : favorites) {
 //                                textView.setText(fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
-                                Log.d("devin",  "data from map !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   "+fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
-                            }
+                                    Log.d("devin", "data from map !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+                                }
+                            
                         } else {
                             Log.d("devin", "No such document");
+                            Toast.makeText(getContext(), "no favorites yet!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -123,62 +133,14 @@ FirebaseAuth auth;
 
 
 
-//        String text = String.join(",\n\n\n\n ", myList);
-//        textView.setText(text);
 
-//        List<favModel> itemList = new ArrayList<>();
-//        for (String favorite : myList) {
-//            String[] parts = favorite.split(",");
-//            int id = Integer.parseInt(parts[0]);
-//            String verse = parts[1];
-//            String translate = parts[1];
-//            String description = parts[2];
-//            itemList.add(new favModel(id, verse,translate, description));
-//        }
-
-
-//        favAdepter adapter = new favAdepter(itemList);
-//        Log.d("devin","favoriteList  2  "+itemList+"\n");
-//        recyclerView.setAdapter(adapter);
-
-
-//        String jsonArrayString = String.valueOf(sharedPreferences.getStringSet("favoriteList", null));
-//        JSONArray jsonArray = null;
-//        try {
-//            jsonArray = new JSONArray(jsonArrayString);
-//        } catch (JSONException e) {
-//            throw new RuntimeException(e);
-//        }
-//        ArrayList<Set<String>> myList1 = new ArrayList<>();
-//        for (int i = 0; i < jsonArray.length(); i++) {
-//            JSONArray setArray = null;
-//            try {
-//                setArray = jsonArray.getJSONArray(i);
-//            } catch (JSONException e) {
-//                throw new RuntimeException(e);
-//            }
-//            Set<String> set = new HashSet<>();
-//            for (int j = 0; j < setArray.length(); j++) {
-//                try {
-//                    set.add(setArray.getString(j));
-//                } catch (JSONException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            myList1.add(set);
-//        }
-//        StringBuilder sb = new StringBuilder();
-//
-//        for (Set<String> set : myList1) {
-//            for (String element : set) {
-//                sb.append(element).append(" ");
-//            }
-//            sb.append("\n"); // Add a newline character to separate sets
-//        }
-//
-//        String result = sb.toString();
-//        textView.setText(result);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        super.onDestroyView();
     }
 }

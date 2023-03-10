@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.visonofman.Activity.HomeActivity;
+import com.example.visonofman.ModelClass.fav_integers;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -40,6 +41,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -334,10 +336,10 @@ public class SignupFragment extends Fragment {
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     Log.d("firebase", "User added to Firestore");
-
+                                                    List<fav_integers> integers=new ArrayList<>();
                                                     firestore.collection("users")
                                                             .document(userId)
-                                                            .update("favorite", new HashMap<>())
+                                                            .update("favorite", integers)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {

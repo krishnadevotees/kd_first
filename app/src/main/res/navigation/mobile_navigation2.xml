@@ -63,7 +63,7 @@
     <fragment
         android:id="@+id/fav_Fragment"
         android:name="com.example.visonofman.ui.favrate.fav_Fragment"
-        android:label="fragment_fav_"
+        android:label="Favorites"
         tools:layout="@layout/fragment_fav_" />
     <fragment
         android:id="@+id/passFragment"

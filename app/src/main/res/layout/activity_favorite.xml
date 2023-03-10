@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Activity.FavoriteActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -12,7 +14,7 @@
         >
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarcustom"
+            android:id="@+id/toolbarcustom2"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/safrron"
@@ -20,7 +22,16 @@
             app:popupTheme="@style/Theme.Material3.DayNight.NoActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-
+    <fragment
+        android:id="@+id/nav_host_fragment_display2"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/mobile_navigation2"
+        tools:ignore="FragmentTagUsage" />
 
 </LinearLayout>

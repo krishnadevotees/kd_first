@@ -3,30 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   android:layout_marginTop="20dp"
+   android:layout_marginTop="05dp"
     tools:context=".ui.favrate.fav_Fragment">
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20sp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp"
-            android:id="@+id/tv_fa"
-            android:textSize="20sp"
-            android:paddingBottom="20dp"
-            android:textColor="@color/blue"
-            />
-
-    </ScrollView>
-<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--    <ScrollView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"-->
-<!--        android:id="@+id/fav_rv"-->
-<!--        android:layout_margin="15dp"-->
-<!--        />-->
+<!--        android:layout_marginBottom="20sp">-->
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="15dp"-->
+<!--            android:id="@+id/tv_fa"-->
+<!--            android:textSize="20sp"-->
+<!--            android:paddingBottom="20dp"-->
+<!--            android:textColor="@color/blue"-->
+<!--            />-->
+
+<!--    </ScrollView>-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fav_rv"
+        android:layout_margin="5dp"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

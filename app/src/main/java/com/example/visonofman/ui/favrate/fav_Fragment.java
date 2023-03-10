@@ -3,6 +3,7 @@ package com.example.visonofman.ui.favrate;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -16,19 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.visonofman.Activity.FavoriteActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import com.example.visonofman.Adepters.favAdepter;
 
-import com.example.visonofman.ModelClass.favModel;
 import com.example.visonofman.ModelClass.fav_integers;
 import com.example.visonofman.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -61,11 +62,12 @@ FirebaseAuth auth;
 //            Log.d("devin",""+list.get(i)+"\n");
 //        }
 
-        textView=view.findViewById(R.id.tv_fa);
-//        recyclerView=view.findViewById(R.id.fav_rv);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        textView=view.findViewById(R.id.tv_fa);
+        recyclerView=view.findViewById(R.id.fav_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
+
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("favorite", MODE_PRIVATE);
         Set<String> myList = sharedPreferences.getStringSet("favorites", null);
@@ -89,9 +91,22 @@ FirebaseAuth auth;
                                 fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
                                 favorites.add(favorite);
                             }
+                            favAdepter favAdepter1=new favAdepter(favorites, getContext(), new favAdepter.ItemClickLisener() {
+                                @Override
+                                public void onItemClick(fav_integers fav_integers) {
 
+                                    Intent intent = new Intent(getContext(), FavoriteActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("l",fav_integers.getLanguage());
+                                    bundle.putInt("v",fav_integers.getVerse());
+                                    bundle.putInt("c",fav_integers.getChapter());
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            });
+                            recyclerView.setAdapter(favAdepter1);
                             for (fav_integers fav : favorites) {
-                                textView.setText(fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
+//                                textView.setText(fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
                                 Log.d("devin",  "data from map !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   "+fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
                             }
                         } else {

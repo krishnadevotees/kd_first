@@ -20,7 +20,7 @@
         <item
             android:id="@+id/fav_Fragment"
             android:icon="@drawable/baseline_favorite__fill_24"
-            android:title="Favrate " />
+            android:title="Favorites " />
 
 
 

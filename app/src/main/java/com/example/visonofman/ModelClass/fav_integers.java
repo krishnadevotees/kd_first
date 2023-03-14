@@ -1,5 +1,7 @@
 package com.example.visonofman.ModelClass;
 
+import java.util.Objects;
+
 public class fav_integers {
     int language,chapter,verse;
 
@@ -34,5 +36,18 @@ public class fav_integers {
 
     public void setVerse(int verse) {
         this.verse = verse;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof fav_integers)) return false;
+        fav_integers other = (fav_integers) obj;
+        return this.language == other.language && this.chapter == other.chapter && this.verse == other.verse;
+    }
+
+    // Override hashCode() to be consistent with equals()
+    @Override
+    public int hashCode() {
+        return Objects.hash(language, chapter, verse);
     }
 }

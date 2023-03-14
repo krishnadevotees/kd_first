@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/bg_home"
     tools:context=".ui.profile.ProfileFragment">
 
 
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:hint="Email"
+            android:hint="@string/email_hint"
             app:boxCornerRadiusBottomEnd="8dp"
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
@@ -97,10 +97,9 @@
                 android:longClickable="false"
                 app:errorEnabled="false"
                 android:maxLines="1"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout3"
@@ -129,7 +128,7 @@
                 app:errorEnabled="false"
                 android:inputType="none"
                 android:longClickable="false"
-                android:textSize="20sp" />
+                android:textSize="17sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -138,7 +137,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:backgroundTint="#4DB6AC"
             android:text="@string/edit"
             app:layout_constraintBottom_toTopOf="@+id/guideline4"
             app:layout_constraintEnd_toEndOf="parent"

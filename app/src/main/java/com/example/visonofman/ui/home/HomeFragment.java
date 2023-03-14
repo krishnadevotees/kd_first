@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -14,6 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.visonofman.R;
 import com.example.visonofman.databinding.FragmentHomeBinding;
+import com.example.visonofman.ui.chapters.ChaptersFragment;
+import com.example.visonofman.ui.favrate.fav_Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -38,11 +44,7 @@ public class HomeFragment extends Fragment {
     String Language;
     ArrayList<String> adhyay =new ArrayList<>();
     ArrayList<String> sloka =new ArrayList<>();
-    private int spinner1Selection = -1;
-    private int spinner2Selection = -1;
-    AutoCompleteTextView textView1;
-    AutoCompleteTextView textView2;
-    int pch,psl;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -130,4 +132,6 @@ public class HomeFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+
 }

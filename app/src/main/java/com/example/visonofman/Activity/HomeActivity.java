@@ -16,10 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.visonofman.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -31,7 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -46,7 +44,6 @@ import com.example.visonofman.databinding.ActivityHome2Binding;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -68,6 +65,7 @@ public class HomeActivity extends AppCompatActivity {
     GoogleSignInClient googleSignInClient;
     int selectedRadioButtonId = 0 ;
     String selectedLanguage ="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +125,7 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
         binding.navView.setItemIconTintList(null);
 
 
@@ -148,6 +147,12 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+//        MenuItem item1=menu.findItem(R.id.action_cLanguage);
+//        if (new ChaptersFragment().isVisible() || new fav_Fragment().isVisible()){
+//            item1.setVisible(true);
+//        }else {
+//            item1.setVisible(false);
+//        }
         return true;
     }
 
@@ -197,6 +202,14 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
 
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem menuItem = menu.findItem(R.id.action_cLanguage);
+        int selectedItemId = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2).getCurrentDestination().getId();
+        menuItem.setVisible(selectedItemId == R.id.nav_chapters || selectedItemId == R.id.fav_Fragment);
+        return true;
     }
 
     public void showDialog() {
@@ -374,6 +387,5 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
 
 
     }
-
 
 }

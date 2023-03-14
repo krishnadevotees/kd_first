@@ -9,13 +9,14 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:theme="@style/Theme.Design.NoActionBar"
+       style="@style/CustomActionBar"
        >
 
        <androidx.appcompat.widget.Toolbar
            android:id="@+id/toolbar"
            android:layout_width="match_parent"
            android:layout_height="?attr/actionBarSize"
-           android:background="@color/safrron"
+           android:background="@color/bg_home"
            app:layout_anchorGravity="center"
            app:popupTheme="@style/Theme.Design.NoActionBar" />
 

@@ -72,6 +72,7 @@ public class Display2Fragment extends Fragment {
     List<fav_integers> favorites = new ArrayList<>();
     MenuItem favoriteItem;
     Drawable myDrawable0,myDrawable2;
+    int currentIndex;
     public Display2Fragment(int chapter,int verse,int language) {
         this.chapter=chapter;
         this.verse=verse;
@@ -84,7 +85,7 @@ public class Display2Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_display2, container, false);
-
+        setHasOptionsMenu(true);
 
         myDrawable0 =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite_24, null);
         myDrawable2 =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite__fill_24, null);
@@ -92,7 +93,7 @@ public class Display2Fragment extends Fragment {
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("language",0);
         Language = sharedPreferences.getString("lan","0");
         Log.d("dev","selectedLanguage :::  "+Language);
-
+        sloka="श्लोक ";
         l= Integer.parseInt(Language);
 
         Log.d("devin","chapter no and verse no"+chapter+" "+verse);
@@ -104,6 +105,9 @@ public class Display2Fragment extends Fragment {
         tv1=view.findViewById(R.id.textView);
         tv2=view.findViewById(R.id.textView2);
         tv3=view.findViewById(R.id.textView3);
+
+        FloatingActionButton nextfab= view.findViewById(R.id.right_fab);
+        FloatingActionButton prevfab = view.findViewById(R.id.left_fab);
 
 
         firebaseDatabase= FirebaseDatabase.getInstance();
@@ -117,6 +121,61 @@ public class Display2Fragment extends Fragment {
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
         progressDialog.show();
+
+
+
+        firestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists() && documentSnapshot.get("favorite") != null) {
+
+                    int[] myArray = new int[0];
+
+                    // retrieve the favorite list from the document
+                    if(documentSnapshot.get("favorite").equals(myArray)){
+                        // no fav
+                        Log.d("devin", "documentSnapshot.get(\"favorite\").equals(myArray) ==>> True");
+                    }else {
+
+                        List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
+
+                        for (HashMap<String, Object> hashMap : favoritesMap) {
+                            Long l = (Long) hashMap.get("language");
+                            Long chapter = (Long) hashMap.get("chapter");
+                            Long verse = (Long) hashMap.get("verse");
+
+                            fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
+                            favorites.add(favorite);
+                        }
+//                        integers.clear();
+                        integers = favorites;
+                        currentIndex = integers.indexOf(new fav_integers(language,chapter,verse));
+                        if (currentIndex == integers.size() - 1){
+                            nextfab.setVisibility(View.GONE);
+                        }else if (currentIndex ==0 &&  integers.size()-1 == 0){
+                            nextfab.setVisibility(View.GONE);
+                            prevfab.setVisibility(View.GONE);
+                        }
+                        Log.d("devin", "Current Index is ==> "+ currentIndex);
+                        Log.d("devin", "size of integers ==> "+ integers.size());
+
+//                        for (fav_integers fav : favorites) {
+//                            Log.d("devin", "data from map in display frag  favoritesfavorites favo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+//                        }
+                        for (fav_integers fav : integers) {
+                            Log.d("devin", "data from map in display frag integersintegers  inte!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+                        }
+                    }
+                } else {
+                    Log.d("devin", "No such document");
+                }
+            }
+        });
+
+
+
+
+
 
 
         firestore.collection("users").document(auth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -207,10 +266,46 @@ public class Display2Fragment extends Fragment {
             }
         });
 
-        FloatingActionButton nextfab= view.findViewById(R.id.right_fab);
-        FloatingActionButton prevfab = view.findViewById(R.id.left_fab);
 
 
+        nextfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (currentIndex < integers.size() - 1){
+                    fav_integers fav_integers1= integers.get(currentIndex+1);
+                    language= fav_integers1.getLanguage();
+                    chapter=fav_integers1.getChapter();
+                    verse= fav_integers1.getVerse();
+                    currentIndex++;
+                    showData(verse);
+                    prevfab.setVisibility(View.VISIBLE);
+
+                }else {
+                    nextfab.setVisibility(View.GONE);
+                }
+
+
+            }
+        });
+
+        prevfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentIndex > 0){
+                    fav_integers fav_integers1= integers.get(currentIndex-1);
+                    language= fav_integers1.getLanguage();
+                    chapter=fav_integers1.getChapter();
+                    verse= fav_integers1.getVerse();
+                    currentIndex--;
+                    showData(verse);
+                    nextfab.setVisibility(View.VISIBLE);
+                }else {
+                    prevfab.setVisibility(View.GONE);
+                }
+
+            }
+        });
 
 
 
@@ -288,7 +383,7 @@ public class Display2Fragment extends Fragment {
 //        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
 //        favoriteMenuItem.setVisible(true);
         favoriteItem = menu.findItem(R.id.action_favorite);
-        favoriteItem.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
+        favoriteItem.setIcon(R.drawable.baseline_favorite__fill_24);
         favoriteItem.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -298,28 +393,32 @@ public class Display2Fragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                //do with your action
-                isFavorite = !isFavorite;
-                item.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
-                if (isFavorite){
-//                    item.setIcon(myDrawable2);
-//                    addToList();
-//                    Update();//*****************
-
-                    Toast.makeText(getContext(), ""+Vid+" Added to favorite ", Toast.LENGTH_SHORT).show();
-
-                    isFavorite = true;
-                }else {
-//                    item.setIcon(myDrawable);
-                    Toast.makeText(getContext(), ""+Vid+" removed from favorite ", Toast.LENGTH_SHORT).show();
-
-//                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("favorite", MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    Set<String> myList = sharedPreferences.getStringSet("favoriteList", null);
-
-                    isFavorite = false;
+                if (integers.size() > 0) {
+                    remove();
+                    if (currentIndex > 0) {
+                        // show previous item
+                        currentIndex--;
+                        fav_integers integers1 = integers.get(currentIndex);
+                        language=integers1.getLanguage();
+                        chapter=integers1.getChapter();
+                        verse=integers1.getVerse();
+                        showData(verse);
+                        getActivity().invalidateOptionsMenu();
+                    } else if (currentIndex < integers.size()) {
+                        // show next item
+                        fav_integers integers2 = integers.get(currentIndex);
+                        language=integers2.getLanguage();
+                        chapter=integers2.getChapter();
+                        verse=integers2.getVerse();
+                        showData(verse);
+                        getActivity().invalidateOptionsMenu();
+                    } else {
+                        onDestroy();
+                    }
+                } else {
 
                 }
+
 
                 return true;
             default:
@@ -327,41 +426,31 @@ public class Display2Fragment extends Fragment {
         }
     }
 
-    public void Update(){
-
+    private void remove() {
         if (integers.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
-
-        }else {
             integers.remove(new fav_integers(l,chapter,verse));
 
+            firestore.collection("users").document(auth.getCurrentUser().getUid()).update("favorite", integers)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("devin", "Favorite map updated for current user! Remooved");
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("devin", "Error updating favorite map for current user remove ", e);
+                        }
+                    });
+
+            Toast.makeText(getContext(), "Removed from favorite", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), R.string.language_change_warning, Toast.LENGTH_SHORT).show();
+            Log.d("devin", "Remove else error");
         }
-
-        Log.d("devin", "Favorite map updated language "+l);
-
-
-//        for (fav_integers favorite : integers) {
-//            Log.d("devin", "Language: " + favorite.getLanguage() + ", Chapter: " + favorite.getChapter() + ", Verse: " + favorite.getVerse());
-//        }
-
-
-        firestore.collection("users").document(auth.getCurrentUser().getUid()).update("favorite", integers)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("devin", "Favorite map updated for current user!");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("devin", "Error updating favorite map for current user", e);
-                    }
-                });
-
-
     }
-
 
 
 

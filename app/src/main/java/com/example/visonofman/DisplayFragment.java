@@ -2,18 +2,26 @@ package com.example.visonofman;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +84,8 @@ public class DisplayFragment extends Fragment {
     FirebaseAuth auth;
     String lang;
     int l;
-    String sloka;
+    String sloka, tran,desc;
+    Button fav_button;
     FirebaseUser currentUser;
     List<fav_integers> integers=new ArrayList<>();
     List<fav_integers> favorites = new ArrayList<>();
@@ -97,7 +107,7 @@ public class DisplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_display, container, false);
         setHasOptionsMenu(true);
-        sloka="श्लोक";
+        sloka="श्लोक ";
 
          myDrawable0 =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite_24, null);
          myDrawable2 =  ResourcesCompat.getDrawable(getResources(), R.drawable.baseline_favorite__fill_24, null);
@@ -118,6 +128,7 @@ public class DisplayFragment extends Fragment {
         tv1=view.findViewById(R.id.textView);
         tv2=view.findViewById(R.id.textView2);
         tv3=view.findViewById(R.id.textView3);
+        fav_button=view.findViewById(R.id.fav_btn1);
 
 
         firebaseDatabase= FirebaseDatabase.getInstance();
@@ -138,9 +149,12 @@ public class DisplayFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists() && documentSnapshot.get("favorite") != null) {
 
+                    int[] myArray = new int[0];
+
                     // retrieve the favorite list from the document
-                    if(documentSnapshot.get("favorite") == null){
+                    if(documentSnapshot.get("favorite").equals(myArray)){
                         // no fav
+                        Log.d("devin", "documentSnapshot.get(\"favorite\").equals(myArray) ==>> True");
                     }else {
 
                         List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
@@ -153,14 +167,14 @@ public class DisplayFragment extends Fragment {
                             fav_integers favorite = new fav_integers(Math.toIntExact(l), Math.toIntExact(chapter), Math.toIntExact(verse));
                             favorites.add(favorite);
                         }
-                        integers.clear();
+//                        integers.clear();
                         integers = favorites;
 
                         for (fav_integers fav : favorites) {
-                            Log.d("devin", "data from map in display frag  favo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+                            Log.d("devin", "data from map in display frag  favoritesfavorites favo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
                         }
                         for (fav_integers fav : integers) {
-                            Log.d("devin", "data from map in display frag  inte!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
+                            Log.d("devin", "data from map in display frag integersintegers  inte!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());
                         }
                     }
                 } else {
@@ -179,8 +193,8 @@ public class DisplayFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                          sloka = documentSnapshot.getString("verse");
-                        String tran = documentSnapshot.getString("translate");
-                        String desc = documentSnapshot.getString("discription");
+                         tran = documentSnapshot.getString("translate");
+                         desc = documentSnapshot.getString("discription");
 
                         tv1.setText(sloka);
                         tv2.setText(tran);
@@ -284,16 +298,20 @@ public class DisplayFragment extends Fragment {
                 nextfab.setVisibility(View.GONE);
                 Toast.makeText(getContext(), "Go to next chapter ", Toast.LENGTH_SHORT).show();
             }
+
             getActivity().invalidateOptionsMenu();
-            if (integers.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
-                isFavorite=true;
-                favoriteItem.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
-            }
-            else {
+            checkFavorite();
+            fav_button.setBackgroundDrawable(isFavorite ? myDrawable2 : myDrawable0);
 
-                isFavorite=false;
-
-            }
+//            if (integers.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
+//                isFavorite=true;
+//                favoriteItem.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
+//            }
+//            else {
+//
+//                isFavorite=false;
+//
+//            }
 
             Log.d("devin","size from adepter"+size);
             Log.d("devin","verse index from adepter"+verse);
@@ -323,26 +341,67 @@ public class DisplayFragment extends Fragment {
                     showData(next);
 //                    getActivity().invalidateOptionsMenu();
                 }
+
                 getActivity().invalidateOptionsMenu();
-                if (integers.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
-                    isFavorite=true;
-                    favoriteItem.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
+                checkFavorite();
+//                fav_button.setBackgroundDrawable(isFavorite ? myDrawable2 : myDrawable0);
+                if (isFavorite){
+                    fav_button.setBackgroundDrawable(myDrawable2);
                 }else {
-
-                    isFavorite=false;
-
+                    fav_button.setBackgroundDrawable(myDrawable0);
                 }
-
-
             }
         });
 
 
 
+        fav_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkFavorite();
+                if (!isFavorite){
+                    fav_button.setBackgroundDrawable(myDrawable2);
+                    Update();
+                    Toast.makeText(getContext(), ""+Vid+" Added to favorite ", Toast.LENGTH_SHORT).show();
+
+                    isFavorite = true;
+                }else {
+                    fav_button.setBackgroundDrawable(myDrawable0);
+                    isFavorite=false;
+                    remove();
+                }
+            }
+        });
 
 
         return view;
     }
+
+    private void remove() {
+        if (integers.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
+            integers.remove(new fav_integers(l,chapter,verse));
+
+            firestore.collection("users").document(auth.getCurrentUser().getUid()).update("favorite", integers)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("devin", "Favorite map updated for current user! Remooved");
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("devin", "Error updating favorite map for current user remove ", e);
+                        }
+                    });
+
+            Toast.makeText(getContext(), "Removed from favorite", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "Remove else error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void showData(int index){
 //        checkFav();
 
@@ -356,8 +415,12 @@ public class DisplayFragment extends Fragment {
 
                     // Set the title of the ActionBar
                     if (activity != null) {
-                        Objects.requireNonNull(activity.getSupportActionBar()).setTitle(sloka+" "+(index+1));
+                        SpannableString s = new SpannableString(sloka + " " + (index + 1));
+                        s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.textColor)), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Objects.requireNonNull(activity.getSupportActionBar()).setTitle(s);
+
                     }
+
 
                     Verse.setText("");
                     Translate.setText("");
@@ -387,36 +450,23 @@ public class DisplayFragment extends Fragment {
             }
         });
     }
-//    public List<favModel> getData(){
-//        List<favModel> data =new ArrayList<>();
-//        data.add(new favModel(Vid,key1,key2,key3));
-//        return data;
-//    }
-//    public void addToList(){
-//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("favorite", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//
-//        myList.add(""+Vid);
-//        myList.add(key1);
-//        myList.add(key2);
-//        myList.add(key3);
-//
-//        favModel item=new favModel(Vid,key1,key2,key3);
-//
-//        Set<String> favorites = sharedPreferences.getStringSet("favorites", new HashSet<>());
-//
-//        favorites.add(item.getId() + "," + item.getVerse()+ "," +item.getTranslate() + "," + item.getDescription());
-//        sharedPreferences.edit().putStringSet("favorites", favorites).apply();
-//
-//    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.custom_menu, menu);
-//        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
-//        favoriteMenuItem.setVisible(true);
-        favoriteItem = menu.findItem(R.id.action_favorite);
-        favoriteItem.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
-        favoriteItem.setVisible(true);
+        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
+        MenuItem share=menu.findItem(R.id.action_share);
+        favoriteMenuItem.setVisible(true);
+        share.setVisible(true);
+        checkFavorite();
+     if (isFavorite){
+         favoriteMenuItem.setIcon(R.drawable.baseline_favorite__fill_24);
+     }else {
+         favoriteMenuItem.setIcon(R.drawable.baseline_favorite_24);
+     }
+//            favoriteItem.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
+
+        favoriteMenuItem.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -425,58 +475,45 @@ public class DisplayFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favorite:
-                //do with your action
+
                 isFavorite = !isFavorite;
                 item.setIcon(isFavorite ? R.drawable.baseline_favorite__fill_24 : R.drawable.baseline_favorite_24);
                 if (isFavorite){
-//                    item.setIcon(myDrawable2);
-//                    addToList();
-                    Update();//*****************
+                    Update();
 
                     Toast.makeText(getContext(), ""+Vid+" Added to favorite ", Toast.LENGTH_SHORT).show();
-
                     isFavorite = true;
                 }else {
-//                    item.setIcon(myDrawable);
+
                     Toast.makeText(getContext(), ""+Vid+" removed from favorite ", Toast.LENGTH_SHORT).show();
-
-//                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("favorite", MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    Set<String> myList = sharedPreferences.getStringSet("favoriteList", null);
-
+                    remove();
                     isFavorite = false;
 
                 }
-
                 return true;
+            case R.id.action_share:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, ""+sloka+" "+(index+1));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "\n"+""+sloka+" : "+"\n\n\b"+key1+"\n\n\n"+""+tran+" : "+"\n\n"+key2+"\n\n\n"+""+desc+" : "+"\n\n"+key3+"\n\n");
+                startActivity(Intent.createChooser(shareIntent, "Share Via"));
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-    public void checkFav(){
-        if (!isFavorite){
-
-        }
-        else {
-
         }
     }
 
     public void Update(){
 
         if (integers.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
-
+            Log.d("devin", "Update .equals ------------");
         }else {
             integers.add(0,new fav_integers(l,chapter,verse));
-
+            Log.d("devin", "Update added to list integers ");
         }
 
         Log.d("devin", "Favorite map updated language "+l);
-
-
-//        for (fav_integers favorite : integers) {
-//            Log.d("devin", "Language: " + favorite.getLanguage() + ", Chapter: " + favorite.getChapter() + ", Verse: " + favorite.getVerse());
-//        }
 
 
         firestore.collection("users").document(auth.getCurrentUser().getUid()).update("favorite", integers)
@@ -496,6 +533,19 @@ public class DisplayFragment extends Fragment {
 
 
     }
+
+    public void checkFavorite(){
+        if (favorites.contains(new fav_integers(Integer.parseInt(Language),chapter,verse))){
+            isFavorite=true;
+            Log.d("devin","check Favorite true => "+isFavorite +" integers  "+new fav_integers(Integer.parseInt(Language),chapter,verse));
+
+        }else {
+
+            isFavorite=false;
+            Log.d("devin","check Favorite false => "+isFavorite +" integers  "+new fav_integers(Integer.parseInt(Language),chapter,verse));
+        }
+    }
+
 
     @Override
     public void onDestroyView() {

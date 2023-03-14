@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -132,6 +135,17 @@ public class ChaptersFragment extends Fragment {
         transaction.commit();
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.home, menu);
+        MenuItem item1=menu.findItem(R.id.action_cLanguage);
+        if (new ChaptersFragment().isVisible()){
+            item1.setVisible(true);
+        }else {
+            item1.setVisible(false);
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

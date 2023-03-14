@@ -155,7 +155,7 @@ public class VerseListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // set the new title for the ActionBar
-        getActivity().setTitle("Verse");
+
     }
 
     private void showFragment(Fragment fragment, int flag) {

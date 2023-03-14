@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.VisonOfMan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#4DD0E1</item>
+        <item name="colorPrimary">#FF8A65</item>
         <item name="colorPrimaryVariant">#000000</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <!-- Secondary brand color. -->
@@ -12,6 +12,11 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="Theme.VisonOfMan.m3"  parent="Theme.Material3.Dark">
+    </style>
+    <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="titleTextColor">@color/textColor</item>
     </style>
 
 </resources>

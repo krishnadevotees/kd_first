@@ -1,13 +1,20 @@
 package com.example.visonofman.Activity;
 
+import static java.security.AccessController.getContext;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +24,8 @@ import android.widget.Toast;
 import com.example.visonofman.DisplayFragment;
 import com.example.visonofman.R;
 import com.example.visonofman.VerseListFragment;
+
+import java.util.Objects;
 
 public class VerseActivity extends AppCompatActivity {
     int id;
@@ -31,6 +40,9 @@ public class VerseActivity extends AppCompatActivity {
 
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.baseline_arrow_back_24);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.textColor), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -95,7 +107,9 @@ public class VerseActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             // Reset the title and other properties of the ActionBar for other fragments
-            getSupportActionBar().setTitle("List Of Slokas");
+            SpannableString s = new SpannableString("List Of Slokas");
+            s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.textColor)), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Objects.requireNonNull(getSupportActionBar()).setTitle(s);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }

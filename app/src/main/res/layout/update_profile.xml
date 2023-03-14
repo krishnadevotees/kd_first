@@ -6,7 +6,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    style="@style/Theme.VisonOfMan.PopupOverlay"
     android:layout_height="match_parent"
     android:background="@drawable/dialog_bg">
 
@@ -15,7 +14,7 @@
     android:layout_height="wrap_content"
     android:text="@string/update_profile"
     android:textSize="20sp"
-    android:textColor="@color/black"
+    android:textColor="@color/textColor"
     android:textStyle="bold"
     android:gravity="center"
     android:elegantTextHeight="true"
@@ -52,11 +51,11 @@
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/white_btn"
                 android:layout_margin="20dp"
                 android:elegantTextHeight="true"
                 android:elevation="20dp"
-                android:textColor="@color/black"
+                android:textColor="@color/textColor"
                 android:text="@string/browse_image"
                 style="?android:attr/buttonBarButtonStyle"
 
@@ -164,11 +163,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/white"
             android:layout_margin="20dp"
+            android:backgroundTint="@color/white_btn"
             android:elegantTextHeight="true"
             android:elevation="20dp"
-            android:textColor="@color/black"
+            android:textColor="@color/textColor"
             android:text="@string/cancle"
             style="?android:attr/buttonBarButtonStyle" />
 
@@ -185,7 +184,7 @@
 <!--            android:text="@string/update"-->
 <!--            style="?android:attr/buttonBarNeutralButtonStyle"-->
 <!--            />-->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

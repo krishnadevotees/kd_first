@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/bg_home"
     tools:context=".ui.favrate.fav_Fragment">
 
 
@@ -38,7 +38,7 @@
         android:gravity="center"
         android:text="No Favorites yet !"
         android:textSize="25dp"
-        android:textColor="@color/white"
+        android:textColor="@color/textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

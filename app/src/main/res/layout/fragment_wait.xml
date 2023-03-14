@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:backgroundTint="#FFECB3"
+    android:backgroundTint="@color/bg_home"
     android:background="@drawable/cancle_btn_bg"
     tools:context=".WaitFragment">
 
@@ -14,10 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv"
-        android:text="Verify Email and open again"
+        android:text="Thank you for Register \n\n Email Verification link sent to your email  \n\nVerify Email and open again"
         android:padding="20sp"
         android:textSize="25dp"
-        android:textColor="@color/black"
+        android:textColor="@color/textColor"
         android:minLines="2"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

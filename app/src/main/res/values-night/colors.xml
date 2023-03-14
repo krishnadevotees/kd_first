@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -13,12 +14,12 @@
     <color name="safrron">#ff8000</color>
 
 
-    <color name="bg_home">#E0F2F1</color>
-    <color name="bg_nav_header">#F3E5F5</color>
-    <color name="textColor">@color/black</color>
-    <color name="bg_update">@color/white</color>
-    <color name="white_btn">@color/white</color>
-    <color name="bg_next_prev">#9A9A9A</color>
+    <color name="bg_home">#000000</color>
+    <color name="bg_nav_header">#1E2323</color>
+    <color name="textColor">@color/white</color>
+    <color name="bg_update">@color/black</color>
+    <color name="white_btn">@color/black</color>
+    <color name="bg_next_prev">@color/black</color>
 
 
 </resources>

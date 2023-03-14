@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.VisonOfMan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.VisonOfMan" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FF8A65</item>
         <item name="colorPrimaryVariant">#FFB57C</item>
@@ -25,6 +25,12 @@
         <item name="cornerRadius">24dp</item>
     </style>
 
+    <style name="Theme.VisonOfMan.m3"  parent="Theme.Material3.Light">
+    </style>
+
+    <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="titleTextColor">@color/textColor</item>
+    </style>
 
 
     <style name="Theme.VisonOfMan.NoActionBar">

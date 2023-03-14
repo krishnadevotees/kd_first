@@ -23,8 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.visonofman.Activity.HomeActivity;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.example.visonofman.Activity.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -36,13 +35,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-import java.util.function.ObjIntConsumer;
+import java.util.Objects;
 
 public class SigninFragment extends Fragment {
 
@@ -66,6 +66,8 @@ public class SigninFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         loadingDialog = new Dialog(getContext());
         loadingDialog.setContentView(R.layout.login_dialog);
         loadingDialog.setCancelable(false);
@@ -83,7 +85,7 @@ public class SigninFragment extends Fragment {
         });
 
 
-        firebaseAuth = FirebaseAuth.getInstance();
+
 
         google = view.findViewById(R.id.imageView3);
         google.setOnClickListener(new View.OnClickListener() {
@@ -144,36 +146,96 @@ public class SigninFragment extends Fragment {
                 if (isValidEmail(email) && isValidPassword(pass)) {
                     firebaseAuth = FirebaseAuth.getInstance();
 
-//                    FirebaseFirestore firestore=FirebaseFirestore.getInstance();
-//                    firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-                    firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            if (user.isEmailVerified()){
+                    firebaseAuth.fetchSignInMethodsForEmail(email)
+                            .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
+                                    List<String> signInMethods = task.getResult().getSignInMethods();
+                                    if (signInMethods != null && !signInMethods.isEmpty()) {
+                                        // User exists, check if email is verified
+                                        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, "password")
+                                                .addOnCompleteListener(signInTask -> {
+                                                    if (signInTask.isSuccessful()) {
+                                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                        if (user != null && user.isEmailVerified()) {
+                                                            // Email is verified
+                                                            firebaseAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                    if (task.isSuccessful()) {
 
-                                    String name = user.getEmail();
-                                    Toast.makeText(getContext(), "Login as " + name, Toast.LENGTH_SHORT).show();
-                                    loadingDialog.dismiss();
-                                    Intent intent = new Intent(getContext(), HomeActivity.class);
-                                    startActivity(intent);
-                                    getActivity().finish();
+                                                                        String name = user.getEmail();
+                                                                        Toast.makeText(getContext(), "Login as " + name, Toast.LENGTH_SHORT).show();
+                                                                        loadingDialog.dismiss();
+                                                                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                                                                        startActivity(intent);
+                                                                        getActivity().finish();
+                                                                    } else {
+                                                                        // Login failed
+                                                                        loadingDialog.dismiss();
+                                                                        Exception exception = task.getException();
+                                                                        Toast.makeText(getContext(), "Wrong Password" + exception, Toast.LENGTH_SHORT).show();
+                                                                        Log.d("firebase", " signin exc 0::::  " + exception);
+                                                                    }
+                                                                    try {
+                                                                        throw Objects.requireNonNull(task.getException());
+                                                                    } catch (FirebaseAuthInvalidUserException e) {
+                                                                        // Handle invalid user exception
+                                                                        loadingDialog.dismiss();
+                                                                        Log.d("firebase", " signin exception 1::::  " + e);
+                                                                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                                                                        // Handle invalid credentials exception
+                                                                        loadingDialog.dismiss();
+                                                                        Log.d("firebase", " signin exception 2::::  " + e);
+                                                                    } catch (Exception e) {
+                                                                        Log.d("firebase", " signin exception 3::::  " + e);
+                                                                        loadingDialog.dismiss();
+                                                                    }
+
+                                                                }
+                                                            });
+
+                                                        } else {
+                                                            // Email is not verified
+                                                            loadingDialog.dismiss();
+                                                            Toast.makeText(getContext(), "Please Verify your Email", Toast.LENGTH_SHORT).show();
+                                                            p.setText("");
+                                                        }
+                                                    } else {
+                                                        // Sign in failed, handle the exception
+                                                        loadingDialog.dismiss();
+                                                        Exception exception = signInTask.getException();
+                                                        if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+                                                            // User provided an incorrect password
+                                                            Toast.makeText(getContext(), "Incorrect password", Toast.LENGTH_SHORT).show();
+                                                            Log.e("firebase", "signInWithEmailAndPassword: Incorrect password", exception);
+                                                        } else {
+                                                            // Other sign-in error, handle appropriately
+                                                            Toast.makeText(getContext(), "Sign in failed", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(getContext(), "Recreate your password", Toast.LENGTH_SHORT).show();
+                                                            Log.e("firebase", "signInWithEmailAndPassword: Sign in failed", exception);
+                                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        // User does not exist
+                                        Toast.makeText(getContext(), "User does not exist ", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    // Login failed
-                                    loadingDialog.dismiss();
-                                    Exception exception = task.getException();
-                                    Toast.makeText(getContext(), "exception at oncomplete signin frag" + exception, Toast.LENGTH_SHORT).show();
-                                    Log.d("firebase", " signin exc ::::  " + exception);
+                                    // Task failed with an exception
+                                    try {
+                                        task.getException();
+                                    }
+                                    catch (Exception e){
+                                        Log.d("firebase", " signin exception 5::::  " + e);
+                                    }
                                 }
-                            }else {
-                                Toast.makeText(getContext(), "Please Verify your Email", Toast.LENGTH_SHORT).show();
-                                p.setText("");
-
-                            }
-
-                        }
-                    });
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    loadingDialog.dismiss();
+                                    Toast.makeText(getContext(), "password is wrong", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 } else {
                     loadingDialog.dismiss();
 
@@ -304,7 +366,7 @@ public class SigninFragment extends Fragment {
         new CountDownTimer(30000, 2000) {
             public void onTick(long millisUntilFinished) {
                 // Do nothing.
-                Toast.makeText(getContext(), "Please Wait 15 seconds ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please Wait 10 seconds ", Toast.LENGTH_SHORT).show();
             }
 
             public void onFinish() {

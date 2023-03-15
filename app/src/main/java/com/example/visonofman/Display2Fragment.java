@@ -1,12 +1,15 @@
 package com.example.visonofman;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
@@ -37,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,7 +70,7 @@ public class Display2Fragment extends Fragment {
     FirebaseAuth auth;
     String lang;
     int l;
-    String sloka;
+    String sloka,tran,desc;
     FirebaseUser currentUser;
     List<fav_integers> integers=new ArrayList<>();
     List<fav_integers> favorites = new ArrayList<>();
@@ -188,8 +192,8 @@ public class Display2Fragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         sloka = documentSnapshot.getString("verse");
-                        String tran = documentSnapshot.getString("translate");
-                        String desc = documentSnapshot.getString("discription");
+                        tran = documentSnapshot.getString("translate");
+                        desc = documentSnapshot.getString("discription");
 
                         tv1.setText(sloka);
                         tv2.setText(tran);
@@ -380,10 +384,11 @@ public class Display2Fragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.custom_menu, menu);
-//        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
-//        favoriteMenuItem.setVisible(true);
+        MenuItem favoriteMenuItem = menu.findItem(R.id.action_share);
+        favoriteMenuItem.setVisible(true);
         favoriteItem = menu.findItem(R.id.action_favorite);
         favoriteItem.setIcon(R.drawable.baseline_favorite__fill_24);
+        favoriteMenuItem.setVisible(true);
         favoriteItem.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -413,13 +418,20 @@ public class Display2Fragment extends Fragment {
                         showData(verse);
                         getActivity().invalidateOptionsMenu();
                     } else {
-                        onDestroy();
+                        getActivity().finish();
                     }
                 } else {
-
+                    getActivity().finish();
                 }
 
 
+                return true;
+            case R.id.action_share:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, ""+sloka+" "+(index+1));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "\n"+""+sloka+" : "+"\n\n\b"+key1+"\n\n\n"+""+tran+" : "+"\n\n"+key2+"\n\n\n"+""+desc+" : "+"\n\n"+key3+"\n\n");
+                startActivity(Intent.createChooser(shareIntent, "Share Via"));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -74,6 +74,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     Dialog loadingDialog;
     String name, email, bio;
+    String trimmedEmail;
     Uri uri, uri2;
     Bitmap bitmap;
     ImageView img;
@@ -122,9 +123,15 @@ public class ProfileFragment extends Fragment {
                         Picasso.get().load(documentSnapshot.getString("image")).into(binding.profileImage);
                         uri2 = Uri.parse(documentSnapshot.getString("image"));
                     }
+                    int index = email.indexOf("@");
+                    if (index != -1) {
+                        trimmedEmail = email.substring(0, index);
+                    }
+
                     binding.profileBio.setText(bio);
                     binding.profileName.setText(name);
-                    binding.profilrEmail.setText("" + email + "");
+                    binding.profilrEmail.setText(email);
+                    binding.profilrEmail.setError(null);
                     loadingDialog.dismiss();
                 }
             }

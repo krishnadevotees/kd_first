@@ -15,15 +15,25 @@
             android:title="@string/menu_chapter" />
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/icons_userprofile"
+            android:icon="@drawable/icons8_profile"
             android:title="@string/menu_profile" />
         <item
             android:id="@+id/fav_Fragment"
             android:icon="@drawable/baseline_favorite__fill_24"
             android:title="Favorites " />
-
-
-
+        <item
+            android:id="@+id/verseOfTheDayFragment"
+            android:icon="@drawable/icons8_medal"
+            android:title="Verse Of The Day " />
 
     </group>
+    <item android:title="Share Options">
+        <menu>
+            <item android:title="Share"
+                android:id="@+id/nav_share"
+                android:icon="@drawable/baseline_share_24"/>
+        </menu>
+
+    </item>
+
 </menu>

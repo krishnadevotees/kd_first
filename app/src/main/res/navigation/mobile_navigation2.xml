@@ -75,4 +75,9 @@
         android:name="com.example.visonofman.DisplayFragment"
         android:label="fragment_display"
         tools:layout="@layout/fragment_display" />
+    <fragment
+        android:id="@+id/verseOfTheDayFragment"
+        android:name="com.example.visonofman.ui.verseOfTheDay.VerseOfTheDayFragment"
+        android:label="Verse of the day"
+        tools:layout="@layout/fragment_verse_of_the_day" />
 </navigation>

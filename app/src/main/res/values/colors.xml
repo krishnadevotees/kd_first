@@ -14,7 +14,7 @@
 
 
     <color name="bg_home">#E0F2F1</color>
-    <color name="bg_nav_header">#F3E5F5</color>
+    <color name="bg_nav_header">#FF6D00</color>
     <color name="textColor">@color/black</color>
     <color name="bg_update">@color/white</color>
     <color name="white_btn">@color/white</color>

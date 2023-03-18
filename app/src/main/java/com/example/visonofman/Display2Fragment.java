@@ -417,7 +417,7 @@ public class Display2Fragment extends Fragment {
                         verse=integers2.getVerse();
                         showData(verse);
                         getActivity().invalidateOptionsMenu();
-                    } else {
+                    } else if(integers.size() == 0){
                         getActivity().finish();
                     }
                 } else {

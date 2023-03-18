@@ -116,7 +116,8 @@ FirebaseAuth auth;
                             List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
 
                             if (favoritesMap.isEmpty()){
-//                                Toast.makeText(getContext(), "no favorites yet!", Toast.LENGTH_SHORT).show();
+                                recyclerView.setVisibility(View.GONE);
+                                textView1.setVisibility(View.VISIBLE);
                             }else {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 for (HashMap<String, Object> hashMap : favoritesMap) {

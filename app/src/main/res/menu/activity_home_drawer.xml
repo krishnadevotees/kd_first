@@ -25,15 +25,24 @@
             android:id="@+id/verseOfTheDayFragment"
             android:icon="@drawable/icons8_medal"
             android:title="Verse Of The Day " />
+        <item android:title="Tell Your Friends">
+            <menu>
+                <item android:title="Share"
+                    android:id="@+id/nav_share"
+                    android:onClick="drawer_share"
+                    android:icon="@drawable/baseline_share_24"/>
+            </menu>
 
+        </item>
+        <item
+            android:id="@+id/contectUs"
+            android:icon="@drawable/contact_us"
+            android:title="Contect Us " />
+        <item
+            android:id="@+id/aboutUS"
+            android:icon="@drawable/aboutus"
+            android:title="About Us " />
     </group>
-    <item android:title="Share Options">
-        <menu>
-            <item android:title="Share"
-                android:id="@+id/nav_share"
-                android:icon="@drawable/baseline_share_24"/>
-        </menu>
 
-    </item>
 
 </menu>

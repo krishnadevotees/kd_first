@@ -3,8 +3,11 @@ package com.example.visonofman.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.visonofman.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,6 +34,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -49,6 +54,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,8 +69,8 @@ public class HomeActivity extends AppCompatActivity {
     DocumentReference documentReference;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
-    int selectedRadioButtonId = 0 ;
-    String selectedLanguage ="";
+    int selectedRadioButtonId = 0;
+    String selectedLanguage = "";
 
 
     @Override
@@ -78,26 +84,51 @@ public class HomeActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
         documentReference = firestore.collection("users").document(firebaseUser.getUid());
-Log.d("firebase Current user UID =>",firebaseUser.getUid());
+        Log.d("firebase Current user UID =>", firebaseUser.getUid());
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-
         FirebaseApp.initializeApp(this);
-
         setSupportActionBar(binding.appBarHome2.toolbar1);
 
 
         drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, R.string.OpenDrawer, R.string.closeDrawer);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_share:
+                    String url = "https://github.com/krishnadevotees/Application/blob/main/app-debug.apk";
+
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this Application on Git-hub!");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+
+                    startActivity(Intent.createChooser(shareIntent, "Share link via"));
+                    return true;
+                default:
+                    // Handle other menu items
+                    NavController navController = Navigation.findNavController(HomeActivity.this, R.id.nav_host_fragment_content_home2);
+                    NavigationUI.onNavDestinationSelected(item, navController);
+                    drawer.closeDrawer(GravityCompat.START);
+                    return true;
+            }
+        });
+
+
+
 
         View headerview = navigationView.getHeaderView(0);
-        ImageView imageView=headerview.findViewById(R.id.image);
-        TextView name =headerview.findViewById(R.id.name);
-        TextView email =headerview.findViewById(R.id.email);
+        ImageView imageView = headerview.findViewById(R.id.image);
+        TextView name = headerview.findViewById(R.id.name);
+        TextView email = headerview.findViewById(R.id.email);
 
 
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -106,19 +137,15 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
                 if (documentSnapshot.exists()) {
                     name.setText(documentSnapshot.getString("name"));
                     email.setText(documentSnapshot.getString("email"));
-                    if (documentSnapshot.getString("image") != ""){
+                    if (documentSnapshot.getString("image") != "") {
                         Picasso.get().load(documentSnapshot.getString("image")).into(imageView);
                     }
                 }
             }
         });
-//        if (firebaseUser.getPhotoUrl() != null){
-//            Picasso.get().load(firebaseUser.getPhotoUrl()).into(imageView);
-//        }
-
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_chapters, R.id.nav_profile,R.id.fav_Fragment,R.id.verseOfTheDayFragment)
+                R.id.nav_home, R.id.nav_chapters, R.id.nav_profile, R.id.fav_Fragment, R.id.verseOfTheDayFragment)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2);
@@ -203,12 +230,16 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
                 || super.onSupportNavigateUp();
 
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem menuItem = menu.findItem(R.id.action_cLanguage);
+        MenuItem menuItem1 = menu.findItem(R.id.logout);
         int selectedItemId = Navigation.findNavController(this, R.id.nav_host_fragment_content_home2).getCurrentDestination().getId();
-        menuItem.setVisible(selectedItemId == R.id.nav_chapters || selectedItemId == R.id.fav_Fragment);
+        menuItem.setVisible(selectedItemId == R.id.nav_chapters || selectedItemId == R.id.fav_Fragment || selectedItemId == R.id.verseOfTheDayFragment);
+        menuItem1.setVisible(selectedItemId == R.id.nav_home || selectedItemId == R.id.nav_profile);
+
         return true;
     }
 
@@ -221,9 +252,6 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
         RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
         Button okbutton = dialog.findViewById(R.id.ok);
         Button cancle = dialog.findViewById(R.id.cancle);
-
-
-
 
 
 //        if (!isFirstrun){
@@ -250,14 +278,9 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
 //                }
 //            }
 //        });
-        SharedPreferences prefs =  HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
-        selectedRadioButtonId = prefs.getInt("selectedRadioButtonId",0);
+        SharedPreferences prefs = HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
+        selectedRadioButtonId = prefs.getInt("selectedRadioButtonId", 0);
         radioGroup.check(selectedRadioButtonId);
-
-
-
-
-
 
 
         okbutton.setOnClickListener(new View.OnClickListener() {
@@ -311,52 +334,52 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
                 editor.apply();
                 Log.d("devin", "language selected no :::: " + language);
 
-                switch (language){
+                switch (language) {
                     case "0":
-                        selectedLanguage="Hindi";
+                        selectedLanguage = "Hindi";
                         break;
                     case "1":
-                        selectedLanguage="Gujarati";
+                        selectedLanguage = "Gujarati";
                         break;
                     case "2":
-                        selectedLanguage="English";
+                        selectedLanguage = "English";
                         break;
                     case "3":
-                        selectedLanguage="Marathi";
+                        selectedLanguage = "Marathi";
                         break;
                     case "4":
-                        selectedLanguage="Punjabi";
+                        selectedLanguage = "Punjabi";
                         break;
                     case "5":
-                        selectedLanguage="Tamil";
+                        selectedLanguage = "Tamil";
                         break;
                     case "6":
-                        selectedLanguage="Telugu";
+                        selectedLanguage = "Telugu";
                         break;
                     case "7":
-                        selectedLanguage="Kannada";
+                        selectedLanguage = "Kannada";
                         break;
                     case "8":
-                        selectedLanguage="Malayalam";
+                        selectedLanguage = "Malayalam";
                         break;
                     case "9":
-                        selectedLanguage="Bangla";
+                        selectedLanguage = "Bangla";
                         break;
                     default:
-                        selectedLanguage ="Hindi";
+                        selectedLanguage = "Hindi";
                 }
 
 
-                Map<String,Object> data =new HashMap<>();
-                data.put("selectedLanguage",selectedLanguage);
+                Map<String, Object> data = new HashMap<>();
+                data.put("selectedLanguage", selectedLanguage);
                 documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("devin","selectedLanguage Updated !!!!!");
+                        Log.d("devin", "selectedLanguage Updated !!!!!");
                     }
                 });
 
-                SharedPreferences prefs =  HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
+                SharedPreferences prefs = HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
                 SharedPreferences.Editor editor1 = prefs.edit();
                 editor1.putInt("selectedRadioButtonId", radioGroup.getCheckedRadioButtonId());
                 editor1.apply();
@@ -387,5 +410,18 @@ Log.d("firebase Current user UID =>",firebaseUser.getUid());
 
 
     }
+
+    public void drawer_share(MenuItem item) {
+        String url = "https://github.com/krishnadevotees/Application/blob/main/app-debug.apk";
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this Application on Git-hub!");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+
+        startActivity(Intent.createChooser(shareIntent, "Share link via"));
+
+    }
+
 
 }

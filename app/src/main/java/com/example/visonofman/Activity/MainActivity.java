@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         drawerLayout =findViewById(R.id.dl);
-        navigationView  = findViewById( R.id.navview);
+//        navigationView  = findViewById( R.id.navview);
         toolbar = findViewById(R.id.toolbar);
         frameLayout =findViewById(R.id.container);
 //        navController = Navigation.findNavController(MainActivity.this, R.id.nav_host);

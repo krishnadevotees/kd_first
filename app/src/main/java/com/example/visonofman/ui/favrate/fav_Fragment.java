@@ -116,7 +116,7 @@ FirebaseAuth auth;
                             List<HashMap<String, Object>> favoritesMap = (List<HashMap<String, Object>>) documentSnapshot.get("favorite");
 
                             if (favoritesMap.isEmpty()){
-                                Toast.makeText(getContext(), "no favorites yet!", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getContext(), "no favorites yet!", Toast.LENGTH_SHORT).show();
                             }else {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 for (HashMap<String, Object> hashMap : favoritesMap) {
@@ -153,7 +153,7 @@ FirebaseAuth auth;
 
                         } else {
                             Log.d("devin", "No such document");
-                            Toast.makeText(getContext(), "no favorites yet!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "no favorites document!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

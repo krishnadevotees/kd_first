@@ -152,7 +152,7 @@ public class SigninFragment extends Fragment {
                                     List<String> signInMethods = task.getResult().getSignInMethods();
                                     if (signInMethods != null && !signInMethods.isEmpty()) {
                                         // User exists, check if email is verified
-                                        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, "password")
+                                        firebaseAuth.signInWithEmailAndPassword(email, pass)
                                                 .addOnCompleteListener(signInTask -> {
                                                     if (signInTask.isSuccessful()) {
                                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

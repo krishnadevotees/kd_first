@@ -20,28 +20,31 @@
         <item
             android:id="@+id/fav_Fragment"
             android:icon="@drawable/baseline_favorite__fill_24"
-            android:title="Favorites " />
+            android:title="@string/favorites" />
         <item
             android:id="@+id/verseOfTheDayFragment"
             android:icon="@drawable/icons8_medal"
-            android:title="Verse Of The Day " />
-        <item android:title="Tell Your Friends">
+            android:title="@string/verse_of_the_day" />
+        <item android:title="@string/tell_your_friends">
             <menu>
-                <item android:title="Share"
+                <item android:title="@string/share"
                     android:id="@+id/nav_share"
                     android:onClick="drawer_share"
                     android:icon="@drawable/baseline_share_24"/>
+                <item
+                    android:id="@+id/contectUs"
+                    android:onClick="drawer_contectUs"
+                    android:icon="@drawable/contact_us"
+                    android:title="@string/contact_us" />
+                <item
+                    android:id="@+id/aboutUS"
+                    android:icon="@drawable/aboutus"
+                    android:onClick="drawer_aboutUs"
+                    android:title="@string/about_us" />
             </menu>
 
         </item>
-        <item
-            android:id="@+id/contectUs"
-            android:icon="@drawable/contact_us"
-            android:title="Contect Us " />
-        <item
-            android:id="@+id/aboutUS"
-            android:icon="@drawable/aboutus"
-            android:title="About Us " />
+
     </group>
 
 

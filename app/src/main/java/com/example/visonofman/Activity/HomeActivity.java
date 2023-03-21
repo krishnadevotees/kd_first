@@ -1,14 +1,24 @@
 package com.example.visonofman.Activity;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,8 +31,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.visonofman.BuildConfig;
 import com.example.visonofman.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,8 +43,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -52,6 +62,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -71,6 +83,8 @@ public class HomeActivity extends AppCompatActivity {
     GoogleSignInClient googleSignInClient;
     int selectedRadioButtonId = 0;
     String selectedLanguage = "";
+    FirebaseRemoteConfig firebaseRemoteConfig;
+    int INSTALL_REQUEST_CODE = 100;
 
 
     @Override
@@ -88,6 +102,8 @@ public class HomeActivity extends AppCompatActivity {
 
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
+
+        firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
@@ -123,12 +139,13 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-
-
         View headerview = navigationView.getHeaderView(0);
         ImageView imageView = headerview.findViewById(R.id.image);
         TextView name = headerview.findViewById(R.id.name);
         TextView email = headerview.findViewById(R.id.email);
+
+
+        checkUpdate();
 
 
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -157,6 +174,183 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
+
+    private int getVersionCode() {
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            Log.e("version_code", "version_code" + packageInfo.versionCode);
+        } catch (Exception e) {
+            Log.e("getVersionCode", "getVersionCode: " + e);
+        }
+        assert packageInfo != null;
+        return packageInfo.versionCode;
+    }
+
+    private void checkUpdate() {
+
+        FirebaseRemoteConfigSettings firebaseRemoteConfigSettings = new FirebaseRemoteConfigSettings.Builder().setFetchTimeoutInSeconds(5).build();
+        firebaseRemoteConfig.setConfigSettingsAsync(firebaseRemoteConfigSettings);
+//        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(new OnCompleteListener<Boolean>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Boolean> task) {
+//                if (task.isSuccessful()){
+//                     final String new_version_code = firebaseRemoteConfig.getString("new_version_code2");
+//                    Log.e("new_version_code","new_version_code"+new_version_code);
+//
+//                    if (!new_version_code.equals(String.valueOf(getVersionCode()))){
+//
+////                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+////                            try {
+////                                getPackageManager().getPackageInfo(getPackageName(),0).setLongVersionCode(Long.parseLong(new_version_code));
+////                            } catch (PackageManager.NameNotFoundException e) {
+////                                throw new RuntimeException(e);
+////                            }
+////                        }
+//
+//                    }
+//                }
+//            }
+//        });
+        firebaseRemoteConfig.fetch(0)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        firebaseRemoteConfig.activate();
+                        // Log the new value of new_version_code
+                        final String new_version_code = firebaseRemoteConfig.getString("new_version_code2");
+                        Log.d("MyApp", "New version code: " + new_version_code);
+
+                        if (!new_version_code.equals(String.valueOf(getVersionCode()))) {
+                            updateDialog();
+                        }
+                    }
+                });
+//        firebaseRemoteConfig.fetchAndActivate().addOnSuccessListener(new OnSuccessListener<Boolean>() {
+//            @Override
+//            public void onSuccess(Boolean aBoolean) {
+//                firebaseRemoteConfig.activate();
+//                final String new_version_code = firebaseRemoteConfig.getString("new_version_code");
+//                Log.e("new_version_code","new_version_code   "+new_version_code);
+//                final String new_version_code2 = firebaseRemoteConfig.getString("new_version_code2");
+//                Log.e("new_version_code","new_version_code   "+new_version_code2);
+//
+//                if (!new_version_code2.equals(String.valueOf(getVersionCode()))){
+//                    updateDialog();
+////                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+////                            try {
+////                                getPackageManager().getPackageInfo(getPackageName(),0).setLongVersionCode(Long.parseLong(new_version_code));
+////                            } catch (PackageManager.NameNotFoundException e) {
+////                                throw new RuntimeException(e);
+////                            }
+////                        }
+//
+//                }
+//
+//            }
+//        });
+
+
+    }
+
+    private void updateDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("An update is available for the app. Please update to the latest version.")
+                .setCancelable(false)
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String apkUrl = "https://tinyurl.com/2hp4stqy";
+                        String apkFileName = "app-debug.apk";
+
+                        downloadApk(apkUrl, apkFileName);
+
+
+
+
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Close the app
+                        finish();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void downloadApk(String downloadUrl, String fileName) {
+        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle("Downloading " + fileName);
+        request.setDescription("Updating the app to the latest version");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+        // Enqueue the download request
+        long downloadId = downloadManager.enqueue(request);
+
+        // Register a BroadcastReceiver to listen for completion of the download
+        BroadcastReceiver onComplete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (downloadId == intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)) {
+                    // Unregister the BroadcastReceiver
+                    unregisterReceiver(this);
+
+                    // Get the URI of the downloaded file
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(downloadId);
+                    Cursor cursor = downloadManager.query(query);
+                    if (cursor.moveToFirst()) {
+                        @SuppressLint("Range") int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                            @SuppressLint("Range") String uriString = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            Uri uri = Uri.parse(uriString);
+                            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "app-debug.apk");
+                            Uri apkUri = FileProvider.getUriForFile(HomeActivity.this, "com.example.visonofman.fileprovider", file);
+
+
+                            // Create an Intent to install the APK
+                            Intent installIntent = new Intent(Intent.ACTION_VIEW);
+                            installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+
+                            installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                            // Launch the Package Installer activity to install the APK
+
+                            startActivityForResult(installIntent, INSTALL_REQUEST_CODE);
+                        }
+                    }
+                    cursor.close();
+                }
+            }
+        };
+
+        // Register the BroadcastReceiver
+        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == INSTALL_REQUEST_CODE) {
+            // Check if the installation was successful
+            if (resultCode == RESULT_OK) {
+                // Installation was successful, do something
+            } else {
+                // Installation failed, do something
+                finish();
+            }
+        }else {
+            finish();
+        }
+    }
+
+
+
 
     private void showFragment(Fragment fragment, int flag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -424,4 +618,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void drawer_contectUs(MenuItem item) {
+        startActivity(new Intent(HomeActivity.this, ContactUsActivity.class));
+
+    }
+
+    public void drawer_aboutUs(MenuItem item) {
+        startActivity(new Intent(HomeActivity.this,AboutUsActivity.class));
+
+    }
 }

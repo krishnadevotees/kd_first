@@ -20,9 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.example.visonofman.CustomClasses.SecondFragment;
 import com.example.visonofman.R;
 import com.google.android.material.navigation.NavigationView;
 

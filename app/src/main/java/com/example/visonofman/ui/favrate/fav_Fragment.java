@@ -145,6 +145,7 @@ FirebaseAuth auth;
                                 recyclerView.setAdapter(favAdepter1);
 
                                 textView1.setVisibility(View.GONE);
+
                                 for (fav_integers fav : favorites) {
 //                                textView.setText(fav.getLanguage()+" "+ fav.getChapter()+" "+ fav.getVerse());
                                     Log.d("devin", "data from map !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + fav.getLanguage() + " " + fav.getChapter() + " " + fav.getVerse());

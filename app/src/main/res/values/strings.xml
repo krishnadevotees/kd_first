@@ -60,4 +60,47 @@
     <string name="mv">गीता सुगीता कर्तव्या किमन्यैः शास्त्रविस्तरैः । \nया स्वयं पद्मनाभस्य मुखपद्माद्विनिःसृता ।।\n \nजो अपने आप श्रीविष्णु भगवान के मुखकमल से निकली हुई है वह गीता अच्छी तरह कण्ठस्थ करना चाहिए । अन्य शास्त्रों के विस्तार से क्या लाभ? \n\n\n -महर्षि व्यास</string>
     <string name="sc">यं गीतानामसहस्रं ध्येयं श्रीपतिरूपमजस्रम् । \nनेयं सज्जनसंगे चित्तं देयं दीनजनाय च वित्तम ।। \n\nगाने योग्य गीता तो श्री गीता का और श्री विष्णुसहस्रनाम का गान है। धरने योग्य तो श्री विष्णु भगवान का ध्यान है। चित्त तो सज्जनों के संग पिरोने योग्य है और वित्त तो दीन-दुखियों को देने योग्य है। \n\n\n- श्रीमद् आद्य शंकराचार्य</string>
     <string name="sv">\'श्रीमद् भगवदगीता\' उपनिषदरूपी बगीचों में से चुने हुए आध्यात्मिक सत्यरूपी पुष्पों से गुँथा हुआ पुष्पगुच्छ है ।  \n\n- स्वामी विवेकानन्द</string>
+    <string name="about_us">About Us</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="verse_of_the_day">Verse Of The Day</string>
+    <string name="favorites">Favorites</string>
+    <string name="tell_your_friends">Tell Your Friends</string>
+    <string name="share">Share</string>
+    <string name="about_us_content">
+
+Welcome to our Vision Of Man (Bhagavad Gita) application, where we aim to provide a digital platform for users to access and learn about the teachings of the Bhagavad Gita. Our application is designed to help users understand the spiritual and practical aspects of the Bhagavad Gita teachings and apply them in their daily lives.\n
+
+Our team consists of experienced professionals with a passion for spreading the knowledge and wisdom of the Bhagavad Gita. We are committed to providing users with high-quality content that is authentic, accurate, and easy to understand.\n
+
+The Bhagavad Gita is a sacred Hindu scripture that has been passed down through generations for thousands of years. It contains teachings on various aspects of life, including spirituality, ethics, and morality. Our mission is to make these teachings accessible to people all over the world and help them lead a more fulfilling and peaceful life.\m
+
+We believe in the values of integrity, authenticity, and compassion. Our goal is to create a positive impact on society by promoting the teachings of the Bhagavad Gita and helping people live a life of purpose and meaning.\n
+
+Thank you for choosing our Bhagavad Gita application. We hope that you find it helpful in your spiritual journey. If you have any questions or feedback, please feel free to contact us.</string>
+    <string name="contact_us_content">If you have any questions, feedback, or concerns, please don\'t hesitate to contact us. We are always here to help you.
+
+Email: krishnadevotees@gmail.com
+
+
+You can also connect with us on social media:
+
+Facebook: @vision_of_man
+Twitter: @vision_of_man
+Instagram: @vision_of_man
+
+Thank you for using our Bhagavad Gita application. We appreciate your support and look forward to hearing from you.</string>
+    <string name="aboutus_1">Welcome to our Vision Of Man application, where we aim to provide a digital platform for users to access and learn about the teachings of the Bhagavad Gita. Our application is designed to help users understand the spiritual and practical aspects of the Bhagavad Gita teachings and apply them in their daily lives.</string>
+    <string name="aboutus_2">Our team consists of experienced professionals with a passion for spreading the knowledge and wisdom of the Bhagavad Gita. We are committed to providing users with high-quality content that is authentic, accurate, and easy to understand.</string>
+    <string name="aboutus_3">The Bhagavad Gita is a sacred Hindu scripture that has been passed down through generations for thousands of years. It contains teachings on various aspects of life, including spirituality, ethics, and morality. Our mission is to make these teachings accessible to people all over the world and help them lead a more fulfilling and peaceful life.m</string>
+    <string name="aboutus_4">We believe in the values of integrity, authenticity, and compassion. Our goal is to create a positive impact on society by promoting the teachings of the Bhagavad Gita and helping people live a life of purpose and meaning.</string>
+    <string name="aboutus_5">Thank you for choosing our Vision Of Man application. We hope that you find it helpful in your spiritual journey. If you have any questions or feedback, please feel free to contact us.</string>
+    <string name="contactus_1">If you have any questions, feedback, or concerns, please don\'t hesitate to contact us. We are always here to help you.</string>
+    <string name="contactus_2">Email: krishnadevotees18700@gmail.com</string>
+    <string name="contactus_3">You can also connect with us on social media:</string>
+    <string name="contactus_4">Instagram: @bhagavadgita_app</string>
+    <string name="contactus_5">Thank you for using our Vision Of Man application. We appreciate your support and look forward to hearing from you.</string>
+    <string name="copy_email_button_text">copy</string>
+    <string name="copybtn">copybtn</string>
+
+
 </resources>

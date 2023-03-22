@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.DynamicLayout;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.visonofman.ModelClass.UpdateProfileModel;
@@ -63,6 +66,7 @@ import com.squareup.picasso.Picasso;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -197,28 +201,38 @@ public class ProfileFragment extends Fragment {
                     public void onClick(View view) {
 
 
-                        Dexter.withActivity(getActivity())
-                                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                                .withListener(new PermissionListener() {
-                                    @Override
-                                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                                        // Permission granted, browse for image
-                                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                                        intent.setType("image/*");
-                                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
-                                    }
+//                        Dexter.withActivity(getActivity())
+//                                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+//                                .withListener(new PermissionListener() {
+//                                    @Override
+//                                    public void onPermissionGranted(PermissionGrantedResponse response) {
+//                                        // Permission granted, browse for image
+//                                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                                        intent.setType("image/*");
+//                                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+//                                    }
+//
+//                                    @Override
+//                                    public void onPermissionDenied(PermissionDeniedResponse response) {
+//                                        // Permission denied
+//                                    }
+//
+//                                    @Override
+//                                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+//                                        // Show permission rationale dialog
+//                                        token.continuePermissionRequest();
+//                                    }
+//                                }).check();
 
-                                    @Override
-                                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                                        // Permission denied
-                                    }
+                        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            intent.setType("image/*");
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+                        }
 
-                                    @Override
-                                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                                        // Show permission rationale dialog
-                                        token.continuePermissionRequest();
-                                    }
-                                }).check();
 
                     }
                 });
@@ -395,7 +409,7 @@ public class ProfileFragment extends Fragment {
 
 
             } catch (Exception ex) {
-
+                Log.e("inputStream",ex.toString());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -403,6 +417,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        loadingDialog.dismiss();
         super.onDestroyView();
         uri = uri2 = null;
         binding = null;

@@ -62,6 +62,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.squareup.picasso.Picasso;
@@ -104,6 +106,8 @@ public class HomeActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(HomeActivity.this, googleSignInOptions);
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("notification");
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
@@ -448,30 +452,6 @@ public class HomeActivity extends AppCompatActivity {
         Button cancle = dialog.findViewById(R.id.cancle);
 
 
-//        if (!isFirstrun){
-////             selectedRadioButtonId =R.id.hindi;
-//             isFirstrun =false;
-//        }else {
-//
-//            if (selectedRadioButtonId != -1) {
-//
-//
-//            }else {
-//                Toast.makeText(this, "error sharedprefrence ", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
-
-//        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                if (documentSnapshot.exists()){
-//                    selectedLanguage = documentSnapshot.get("selectedLanguage",String.class);
-//
-//                Toast.makeText(HomeActivity.this, "selectedLanguage "+selectedLanguage, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
         SharedPreferences prefs = HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
         selectedRadioButtonId = prefs.getInt("selectedRadioButtonId", 0);
         radioGroup.check(selectedRadioButtonId);

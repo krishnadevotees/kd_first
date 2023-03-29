@@ -495,7 +495,12 @@ public class DisplayFragment extends Fragment {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, ""+sloka+" "+(index+1));
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "\n"+""+sloka+" : "+"\n\n\b"+key1+"\n\n\n"+""+tran+" : "+"\n\n"+key2+"\n\n\n"+""+desc+" : "+"\n\n"+key3+"\n\n");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "\n"+""+sloka+" : "+"\n\n\b"+key1+"\n\n\n"+""+tran+" : "+"\n\n"+key2+"\n\n\n");
+                String url = "https://github.com/krishnadevotees/Application/blob/main/app-debug.apk";
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out this Application on Git-hub!");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+
+                startActivity(Intent.createChooser(shareIntent, "Share link via"));
                 startActivity(Intent.createChooser(shareIntent, "Share Via"));
                 return true;
 

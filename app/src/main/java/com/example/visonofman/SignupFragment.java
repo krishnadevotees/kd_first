@@ -40,6 +40,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,6 +64,31 @@ public class SignupFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     Dialog loadingDialog;
 
+
+    public String hashPassword(String password) {
+        try {
+            // Get an instance of the SHA-256 algorithm
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Convert the password string to a byte array and hash it
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+
+            // Convert the hashed byte array to a hexadecimal string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // Handle the exception if the SHA-256 algorithm is not available on this platform
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public SignupFragment() {
         // Required empty public constructor
@@ -318,6 +346,8 @@ public class SignupFragment extends Fragment {
                                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a", Locale.getDefault());
                                     String dateTimeString = sdf.format(now);
 
+                                    String hashpass = hashPassword(pass);
+                                    Log.d("devin", "Hash Password ==  "+ hashpass);
 
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("name", name);

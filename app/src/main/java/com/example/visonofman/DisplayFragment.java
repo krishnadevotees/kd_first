@@ -468,6 +468,7 @@ public class DisplayFragment extends Fragment {
 
         favoriteMenuItem.setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
+
     }
 
 

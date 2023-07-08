@@ -11,12 +11,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -28,11 +26,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.visonofman.BuildConfig;
 import com.example.visonofman.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -44,6 +42,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
@@ -56,13 +55,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.visonofman.databinding.ActivityHome2Binding;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -86,8 +85,10 @@ public class HomeActivity extends AppCompatActivity {
     int selectedRadioButtonId = 0;
     String selectedLanguage = "";
     FirebaseRemoteConfig firebaseRemoteConfig;
-    int INSTALL_REQUEST_CODE = 100;
+    int INSTALL_REQUEST_CODE = 1000;
+    private static final String TAG = "MainActivity";
 
+    private Intent mServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +176,12 @@ public class HomeActivity extends AppCompatActivity {
 
 
         binding.navView.setItemIconTintList(null);
+
+
+
+
+
+
 
 
     }
@@ -340,7 +347,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == INSTALL_REQUEST_CODE) {
+        if (requestCode == 1000) {
             // Check if the installation was successful
             if (resultCode == RESULT_OK) {
                 // Installation was successful, do something
@@ -349,24 +356,11 @@ public class HomeActivity extends AppCompatActivity {
                 finish();
             }
         }else {
-            finish();
+//            finish();
         }
     }
 
 
-
-
-    private void showFragment(Fragment fragment, int flag) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (flag == 0) {
-            transaction.add(R.id.nav_host_fragment_content_home2, fragment);
-        } else {
-            transaction.replace(R.id.nav_host_fragment_content_home2, fragment);
-
-        }
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -398,6 +392,7 @@ public class HomeActivity extends AppCompatActivity {
                         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
 //                        Intent signInIntent = googleSignInClient.getSignInIntent();
 //                        startActivityForResult(signInIntent, 1);
+
                         finish();
 
                     }
@@ -412,6 +407,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (count == 1) {
@@ -442,14 +438,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void showDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-        dialog.setContentView(R.layout.bottamsheet_layout);
+        final Dialog dialog1 = new Dialog(this);
+        dialog1.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
+        dialog1.setContentView(R.layout.bottamsheet_layout);
 
 
-        RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
-        Button okbutton = dialog.findViewById(R.id.ok);
-        Button cancle = dialog.findViewById(R.id.cancle);
+        RadioGroup radioGroup = dialog1.findViewById(R.id.radioGroup);
+        Button okbutton = dialog1.findViewById(R.id.ok);
+        Button cancle = dialog1.findViewById(R.id.cancle);
 
 
         SharedPreferences prefs = HomeActivity.this.getSharedPreferences("selectedlanguage", 0);
@@ -462,6 +458,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String language = "";
 
+                dialog1.dismiss();
                 int selectedRadioId = radioGroup.getCheckedRadioButtonId();
                 if (selectedRadioId == -1) {
                     return;
@@ -559,10 +556,9 @@ public class HomeActivity extends AppCompatActivity {
                 editor1.apply();
 
                 recreate();
-                dialog.dismiss();
+                dialog1.dismiss();
 
 
-//                Toast.makeText(HomeActivity.this, "Language Changed ", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -571,16 +567,16 @@ public class HomeActivity extends AppCompatActivity {
         cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                dialog1.dismiss();
             }
         });
 
 
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations = R.style.Dialoganimation;
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-        dialog.show();
+        dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog1.getWindow().getAttributes().windowAnimations = R.style.Dialoganimation;
+        dialog1.getWindow().setGravity(Gravity.BOTTOM);
+        dialog1.show();
 
 
     }
@@ -606,5 +602,20 @@ public class HomeActivity extends AppCompatActivity {
     public void drawer_aboutUs(MenuItem item) {
         startActivity(new Intent(HomeActivity.this,AboutUsActivity.class));
 
+    }
+
+
+    public void switchOnclick(View view) {
+        SwitchMaterial switchMaterial = findViewById(R.id.switchMaterial);
+        switchMaterial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+            }
+        });
     }
 }

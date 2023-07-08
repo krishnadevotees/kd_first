@@ -10,8 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -44,7 +47,6 @@ public class HomeFragment extends Fragment {
     String Language;
     ArrayList<String> adhyay =new ArrayList<>();
     ArrayList<String> sloka =new ArrayList<>();
-
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -110,7 +112,6 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 
-
         return root;
     }
 
@@ -121,6 +122,8 @@ public class HomeFragment extends Fragment {
         binding=null;
 
     }
+
+
     private void showFragment(Fragment fragment, int flag) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (flag == 0) {

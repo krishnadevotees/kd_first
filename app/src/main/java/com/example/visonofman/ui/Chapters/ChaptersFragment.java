@@ -145,6 +145,7 @@ public class ChaptersFragment extends Fragment {
         }else {
             item1.setVisible(false);
         }
+
     }
     @Override
     public void onDestroyView() {

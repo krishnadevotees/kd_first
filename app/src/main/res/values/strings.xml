@@ -91,7 +91,7 @@ Instagram: @vision_of_man
 Thank you for using our Bhagavad Gita application. We appreciate your support and look forward to hearing from you.</string>
     <string name="aboutus_1">Welcome to our Vision Of Man application, where we aim to provide a digital platform for users to access and learn about the teachings of the Bhagavad Gita. Our application is designed to help users understand the spiritual and practical aspects of the Bhagavad Gita teachings and apply them in their daily lives.</string>
     <string name="aboutus_2">Our team consists of experienced professionals with a passion for spreading the knowledge and wisdom of the Bhagavad Gita. We are committed to providing users with high-quality content that is authentic, accurate, and easy to understand.</string>
-    <string name="aboutus_3">The Bhagavad Gita is a sacred Hindu scripture that has been passed down through generations for thousands of years. It contains teachings on various aspects of life, including spirituality, ethics, and morality. Our mission is to make these teachings accessible to people all over the world and help them lead a more fulfilling and peaceful life.m</string>
+    <string name="aboutus_3">The Bhagavad Gita is a sacred Hindu scripture that has been passed down through generations for thousands of years. It contains teachings on various aspects of life, including spirituality, ethics, and morality. Our mission is to make these teachings accessible to people all over the world and help them lead a more fulfilling and peaceful life.</string>
     <string name="aboutus_4">We believe in the values of integrity, authenticity, and compassion. Our goal is to create a positive impact on society by promoting the teachings of the Bhagavad Gita and helping people live a life of purpose and meaning.</string>
     <string name="aboutus_5">Thank you for choosing our Vision Of Man application. We hope that you find it helpful in your spiritual journey. If you have any questions or feedback, please feel free to contact us.</string>
     <string name="contactus_1">If you have any questions, feedback, or concerns, please don\'t hesitate to contact us. We are always here to help you.</string>
@@ -101,6 +101,7 @@ Thank you for using our Bhagavad Gita application. We appreciate your support an
     <string name="contactus_5">Thank you for using our Vision Of Man application. We appreciate your support and look forward to hearing from you.</string>
     <string name="copy_email_button_text">copy</string>
     <string name="copybtn">copybtn</string>
+    <string name="dark_mode_switch_title">Dark Mode</string>
 
 
 </resources>

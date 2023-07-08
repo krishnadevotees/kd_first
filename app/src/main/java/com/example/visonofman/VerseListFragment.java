@@ -148,6 +148,7 @@ public class VerseListFragment extends Fragment {
         MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
         favoriteMenuItem.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
+
     }
 
 

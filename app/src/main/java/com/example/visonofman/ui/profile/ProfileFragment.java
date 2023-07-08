@@ -81,6 +81,7 @@ public class ProfileFragment extends Fragment {
     String trimmedEmail;
     Uri uri, uri2;
     Bitmap bitmap;
+    Dialog dialog ;
     ImageView img;
     TextInputEditText n, e, d;
 
@@ -149,7 +150,7 @@ public class ProfileFragment extends Fragment {
         binding.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(getContext());
+                  dialog = new Dialog(getContext());
                 dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
                 dialog.setContentView(R.layout.update_profile);
 
@@ -201,39 +202,39 @@ public class ProfileFragment extends Fragment {
                     public void onClick(View view) {
 
 
-//                        Dexter.withActivity(getActivity())
-//                                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-//                                .withListener(new PermissionListener() {
-//                                    @Override
-//                                    public void onPermissionGranted(PermissionGrantedResponse response) {
-//                                        // Permission granted, browse for image
-//                                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                                        intent.setType("image/*");
-//                                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
-//                                    }
+                        Dexter.withActivity(getActivity())
+                                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                .withListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                                        // Permission granted, browse for image
+                                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                        intent.setType("image/*");
+                                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                                        // Permission denied
+                                    }
+
+                                    @Override
+                                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                        // Show permission rationale dialog
+                                        token.continuePermissionRequest();
+                                    }
+                                }).check();
+
+//                        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+//                        } else {
+//                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                            intent.setType("image/*");
+//                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+//                        }
 //
-//                                    @Override
-//                                    public void onPermissionDenied(PermissionDeniedResponse response) {
-//                                        // Permission denied
-//                                    }
 //
-//                                    @Override
-//                                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-//                                        // Show permission rationale dialog
-//                                        token.continuePermissionRequest();
-//                                    }
-//                                }).check();
-
-                        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
-                        } else {
-                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            intent.setType("image/*");
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
-                        }
-
-
                     }
                 });
 
@@ -274,26 +275,6 @@ public class ProfileFragment extends Fragment {
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Updateing...");
         progressDialog.show();
-
-//        String uname, uemail, udesc ;
-//        uname = n.getText().toString();
-//        uemail = e.getText().toString();
-//        udesc = d.getText().toString();
-
-
-//        if (uri != null) {
-//
-//
-//
-//        } else {
-//            SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage",0);
-//            String uriString = sharedPreferences.getString("imageUri", null);
-//            if (uriString!=null){
-//                uri = Uri.parse(uriString);
-//            }
-//
-//        }
-
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("profileimage", 0);
         String uriString = sharedPreferences.getString("imageUri", null);
@@ -372,9 +353,9 @@ public class ProfileFragment extends Fragment {
             documentReference.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-
-                    getActivity().recreate();
                     progressDialog.dismiss();
+                    getActivity().recreate();
+
                     Toast.makeText(getContext(), "Profile Updated", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -392,7 +373,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             uri = data.getData();
 
@@ -403,7 +384,7 @@ public class ProfileFragment extends Fragment {
             editor.apply();
 
             try {
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                InputStream inputStream = requireActivity().getContentResolver().openInputStream(uri);
                 bitmap = BitmapFactory.decodeStream(inputStream);
                 img.setImageBitmap(bitmap);
 
@@ -412,12 +393,15 @@ public class ProfileFragment extends Fragment {
                 Log.e("inputStream",ex.toString());
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override
     public void onDestroyView() {
         loadingDialog.dismiss();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
         super.onDestroyView();
         uri = uri2 = null;
         binding = null;

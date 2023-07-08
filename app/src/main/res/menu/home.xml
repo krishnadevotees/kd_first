@@ -10,4 +10,9 @@
         android:visible="false"
         android:icon="@drawable/baseline_logout_24"
         android:title="Logout "/>
+    <item android:id="@+id/search"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_search_24"
+        android:title="Logout "/>
+
 </menu>
